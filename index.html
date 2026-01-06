@@ -1,414 +1,384 @@
 <!DOCTYPE html>
-<html lang="fa" dir="ltr">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title data-translate="page-title">leen | IP Scanner</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloudflare IP Scanner - Professional</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#1E1E1E", // Dark Gray Background
+                        accent: "#C7A46C",  // Gold/Luxury
+                        surface: "#2D2D2D", // Card Background
+                        dark: "#121212"
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        vazir: ['Vazirmatn', 'sans-serif'],
+                    },
+                },
+            },
+        }
+    </script>
 
-  <!-- Bootstrap 5 -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-
-  <!-- Vazirmatn Font (Persian) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
-
-  <!-- Custom Styles -->
-  <style>
-    :root {
-      --clr-gold: #C7A46C;
-      --clr-dark: #1E1E1EFF;
-      --gradient-bg: linear-gradient(135deg, #1E1E1EFF 0%, #121212 100%);
-    }
-    body {
-      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--gradient-bg);
-      color: #f5f5f5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .navbar {
-      background: rgba(30,30,30,.85) !important;
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(199,164,108,.25);
-    }
-    .btn-primary {
-      background: var(--clr-gold);
-      border: none;
-      font-weight: 600;
-      transition: transform .2s;
-    }
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      background: #b8965a;
-    }
-    .btn-secondary {
-      background: rgba(199,164,108,.15);
-      border: 1px solid var(--clr-gold);
-      color: var(--clr-gold);
-    }
-    .btn-secondary:hover {
-      background: rgba(199,164,108,.25);
-      color: #fff;
-    }
-    .form-control, .form-select {
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.15);
-      color: #fff;
-    }
-    .form-control:focus, .form-select:focus {
-      background: rgba(255,255,255,.12);
-      border-color: var(--clr-gold);
-      box-shadow: 0 0 0 .2rem rgba(199,164,108,.35);
-    }
-    .table-dark {
-      --bs-table-bg: rgba(30,30,30,.7);
-      --bs-table-border-color: rgba(255,255,255,.1);
-    }
-    .progress {
-      height: 6px;
-    }
-    .progress-bar {
-      background: var(--clr-gold);
-    }
-    footer {
-      margin-top: auto;
-      text-align: center;
-      font-size: .8rem;
-      color: rgba(255,255,255,.55);
-      padding: 2rem 0 1rem;
-    }
-    footer a {
-      color: var(--clr-gold);
-      text-decoration: none;
-    }
-    .lang-switch {
-      cursor: pointer;
-      padding: .25rem .5rem;
-      border-radius: .25rem;
-      transition: background .2s;
-    }
-    .lang-switch:hover {
-      background: rgba(255,255,255,.1);
-    }
-    .lang-switch.active {
-      background: var(--clr-gold);
-      color: #000;
-      font-weight: 600;
-    }
-    .advanced-toggle {
-      cursor: pointer;
-      user-select: none;
-      font-weight: 600;
-      color: var(--clr-gold);
-    }
-    .advanced-body {
-      max-height: 500px;
-      overflow: hidden;
-      transition: max-height .4s ease;
-    }
-    .advanced-body.collapsed {
-      max-height: 0;
-    }
-  </style>
-
-  <meta name="keywords" content="cloudflare, ip scanner, free internet, v2ray, xray">
-  <meta name="robots" content="index,follow">
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1E1E1E; }
+        ::-webkit-scrollbar-thumb { background: #C7A46C; border-radius: 4px; }
+        
+        body { background-color: #1E1E1E; color: white; }
+        .rtl { direction: rtl; font-family: 'Vazirmatn', sans-serif; }
+        .ltr { direction: ltr; font-family: 'Inter', sans-serif; }
+    </style>
 </head>
-<body data-bs-theme="dark">
+<body>
+    <div id="root"></div>
 
-<nav class="navbar navbar-dark sticky-top">
-  <div class="container-fluid justify-content-between align-items-center">
-    <div class="d-flex gap-2">
-      <span class="lang-switch active" onclick="changeLanguage('fa')">فا</span>
-      <span class="lang-switch" onclick="changeLanguage('en')">EN</span>
-      <span class="lang-switch" onclick="changeLanguage('de')">DE</span>
-      <span class="lang-switch" onclick="changeLanguage('fr')">FR</span>
-      <span class="lang-switch" onclick="changeLanguage('es')">ES</span>
-      <span class="lang-switch" onclick="changeLanguage('tr')">TR</span>
-      <span class="lang-switch" onclick="changeLanguage('ru')">RU</span>
-      <span class="lang-switch" onclick="changeLanguage('zh')">中文</span>
-    </div>
-    <h5 class="mb-0" data-translate="header-text">اینترنت برای همه یا هیچکس</h5>
-    <div></div>
-  </div>
-</nav>
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
 
-<main class="container py-4 flex-grow-1">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-10 col-lg-8">
+        // --- ICONS (SVG Components) ---
+        const IconPlay = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>;
+        const IconStop = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 12"/></svg>; // RotateCcw lookalike
+        const IconWifi = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>;
+        const IconGlobe = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>;
+        const IconSettings = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.09a2 2 0 0 1-1-1.74v-.47a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>;
+        const IconShield = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>;
+        const IconDownload = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>;
 
-      <div class="alert alert-primary d-flex align-items-center" id="defAlert"></div>
+        // --- DATA ---
+        const CLOUDFLARE_RANGES = [
+            "173.245.48.0/20", "103.21.244.0/22", "103.22.200.0/22", "103.31.4.0/22",
+            "141.101.64.0/18", "108.162.192.0/18", "190.93.240.0/20", "188.114.96.0/20",
+            "197.234.240.0/22", "198.41.128.0/17", "162.158.0.0/15", "104.16.0.0/13",
+            "104.24.0.0/14", "172.64.0.0/13", "131.0.72.0/22"
+        ];
 
-      <div class="row g-3 mb-3">
-        <div class="col-md-6">
-          <label class="form-label" data-translate="ip-count"></label>
-          <input class="form-control" type="number" id="max-ip" min="1" max="5000" value="20">
-        </div>
-        <div class="col-md-6">
-          <label class="form-label" data-translate="max-latency"></label>
-          <input type="number" class="form-control" id="max-latency" min="50" max="3000" step="50" value="400">
-        </div>
-      </div>
+        // --- UTILS ---
+        const ipToLong = (ip) => ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0) >>> 0;
+        const longToIp = (long) => [24, 16, 8, 0].map((shift) => (long >>> shift) & 255).join('.');
+        
+        const parseCIDR = (cidr) => {
+            const [ip, mask] = cidr.split('/');
+            const maskInt = parseInt(mask, 10);
+            const ipLong = ipToLong(ip);
+            const size = Math.pow(2, 32 - maskInt);
+            return { start: ipLong, end: ipLong + size - 1 };
+        };
 
-      <div class="mb-3">
-        <div class="advanced-toggle d-flex align-items-center gap-2" onclick="toggleAdvanced()">
-          <span>⚙️</span>
-          <span data-translate="advanced">Advanced</span>
-          <span id="adv-icon">▼</span>
-        </div>
-        <div id="advanced-body" class="advanced-body">
-          <div class="row g-3 pt-3">
-            <div class="col-md-6">
-              <label class="form-label" data-translate="include-range"></label>
-              <input class="form-control" type="text" id="ip-include" placeholder="1.1.1.1/24,8.8.8.8/24">
-            </div>
-            <div class="col-md-6">
-              <label class="form-label" data-translate="exclude-range"></label>
-              <input type="text" class="form-control" id="ip-exclude" placeholder="1, 88.25, 41,55">
-            </div>
-          </div>
-          <div class="row g-3 pt-3">
-            <div class="col-12">
-              <label class="form-label" data-translate="expressions"></label>
-              <input class="form-control" type="text" id="ip-regex" placeholder="^88\.172\.|^101\.">
-            </div>
-          </div>
-        </div>
-      </div>
+        const getRandomIpFromRanges = (ranges) => {
+            const range = ranges[Math.floor(Math.random() * ranges.length)];
+            const { start, end } = parseCIDR(range);
+            const randomLong = Math.floor(Math.random() * (end - start)) + start;
+            return longToIp(randomLong);
+        };
 
-      <div class="alert alert-danger d-flex align-items-center" data-translate="dangAlert"></div>
+        const translations = {
+            en: {
+                title: "Cloudflare IP Scanner",
+                subtitle: "Find the fastest clean IPs with low latency",
+                start: "Start Scan",
+                stop: "Stop",
+                settings: "Configuration",
+                results: "Scan Results",
+                maxPing: "Max Ping (ms)",
+                ipCount: "IPs Needed",
+                scanLimit: "Max Scan Count",
+                ranges: "IP Ranges (CIDR)",
+                status: "Status",
+                scanning: "Scanning...",
+                idle: "Ready",
+                completed: "Completed",
+                ip: "IP Address",
+                ping: "Ping (Latency)",
+                export: "Export CSV",
+                found: "Found",
+                scanned: "Scanned",
+                language: "فارسی",
+                desc: "This tool scans Cloudflare IP ranges directly from your browser to find the lowest latency IPs for your network configuration.",
+                bestIpChance: "Optimization"
+            },
+            fa: {
+                title: "اسکنر آی‌پی کلادفلر",
+                subtitle: "یافتن سریع‌ترین آی‌پی‌های تمیز با پینگ پایین",
+                start: "شروع اسکن",
+                stop: "توقف",
+                settings: "تنظیمات اسکن",
+                results: "نتایج اسکن",
+                maxPing: "حداکثر پینگ (میلی‌ثانیه)",
+                ipCount: "تعداد آی‌پی مورد نیاز",
+                scanLimit: "حداکثر تعداد بررسی",
+                ranges: "رنج‌های آی‌پی (CIDR)",
+                status: "وضعیت",
+                scanning: "در حال اسکن...",
+                idle: "آماده",
+                completed: "تکمیل شد",
+                ip: "آدرس آی‌پی",
+                ping: "پینگ (تاخیر)",
+                export: "دانلود خروجی",
+                found: "پیدا شده",
+                scanned: "بررسی شده",
+                language: "English",
+                desc: "این ابزار رنج‌های آی‌پی کلادفلر را مستقیماً از مرورگر شما اسکن می‌کند تا بهترین و سریع‌ترین آی‌پی‌ها را برای شبکه شما پیدا کند.",
+                bestIpChance: "بهینه‌سازی"
+            }
+        };
 
-      <div class="d-grid gap-2">
-        <button class="btn btn-primary" id="btn-start" onclick="startScan()" disabled></button>
-        <button class="btn btn-danger" id="btn-cancel" onclick="cancelScan()" disabled></button>
-      </div>
+        // --- APP COMPONENT ---
+        function App() {
+            const [lang, setLang] = useState('en');
+            const t = translations[lang];
+            const isRTL = lang === 'fa';
 
-      <div id="TableForm" class="none mt-4">
-        <div class="row my-2 border-bottom border-dark py-3">
-          <div id="test-no"></div>
-          <div class="col col-xs-6 col-lg-3 py-1" id="ip-no"></div>
-          <div class="col col-xs-1 col-lg-1 py-1" id="ip-try"></div>
-          <div class="col col-xs-3 col-lg-2 py-1" id="ip-latency"></div>
-        </div>
+            const [isRunning, setIsRunning] = useState(false);
+            const [config, setConfig] = useState({
+                maxPing: 1000,
+                targetCount: 10,
+                maxScanLimit: 500,
+                ranges: CLOUDFLARE_RANGES.join('\n'),
+                highChance: true
+            });
+            
+            const [results, setResults] = useState([]);
+            const [stats, setStats] = useState({ scanned: 0, found: 0 });
+            const stopSignal = useRef(false);
 
-        <div class="table-responsive">
-          <table class="table table-dark table-striped align-middle">
-            <thead>
-              <tr>
-                <th width="35">#</th>
-                <th data-translate="ip"></th>
-                <th data-translate="latency"></th>
-                <th width="70">
-                  <div class="btn-group" role="group">
-                    <button class="btn btn-secondary btn-sm" onclick="downloadAsCSV()">
-                      <img height="20" src="assets/img/icon-csv.png" alt="CSV">
-                    </button>
-                    <button class="btn btn-secondary btn-sm" onclick="downloadAsJSON()">
-                      <img height="20" src="assets/img/icon-json.png" alt="JSON">
-                    </button>
-                    <button class="btn btn-secondary btn-sm" onclick="copyAllToClipboard()">
-                      <img height="20" src="assets/img/icon-copy.png" alt="Copy">
-                    </button>
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody id="result"></tbody>
-          </table>
-        </div>
-      </div>
+            useEffect(() => {
+                const body = document.body;
+                if (isRTL) {
+                    body.classList.remove('ltr');
+                    body.classList.add('rtl');
+                } else {
+                    body.classList.remove('rtl');
+                    body.classList.add('ltr');
+                }
+            }, [isRTL]);
 
-    </div>
-  </div>
-</main>
+            const measureLatency = async (ip) => {
+                const start = performance.now();
+                const timeout = 1500; 
+                const controller = new AbortController();
+                const id = setTimeout(() => controller.abort(), timeout);
 
-<footer>
-  <p>© NajiDevs - 2025 All rights reserved. No part of this website may be reproduced, distributed, or transmitted in any form or by any means without the prior written permission of the owner.</p>
-  <a class="btn btn-sm btn-outline-light mt-2" href="https://github.com/naajidevs">NaajiDevs</a>
-</footer>
+                try {
+                    await fetch(`https://${ip}`, { 
+                        mode: 'no-cors', 
+                        signal: controller.signal,
+                        cache: 'no-store'
+                    });
+                    clearTimeout(id);
+                    return Math.round(performance.now() - start);
+                } catch (error) {
+                    clearTimeout(id);
+                    if (error.name === 'AbortError') return -1;
+                    return Math.round(performance.now() - start); 
+                }
+            };
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
-<script src="./assets/js/jquery.min.js"></script>
-<script src="./assets/js/script.js"></script>
-<script>
-  const translations = {
-    de: {
-      "page-title": "leen | IP Scanner",
-      "header-text": "Freies Internet ist ein Menschenrecht | Frauen Leben Freiheit",
-      "defAlert": "Mit dem IP-Scanner-Tool können Sie nach sauberen Cloudflare-IPs suchen!",
-      "ip-count": "Anzahl der IPs",
-      "max-latency": "Maximale Latenz",
-      "include-range": "Bereiche zum Einbeziehen (z. B.: 1.1.1.1/24,8.8.8.8/24)",
-      "exclude-range": "Bereiche zum Ausschließen (z. B.: 1, 88.25, 41,55)",
-      "expressions": "Regulärer Ausdruck (z. B.: ^88\\.172\\.|^101\\.)",
-      "dangAlert": "Bevor Sie beginnen, schalten Sie Ihr VPN aus!",
-      "start": "Starten",
-      "stop": "Stoppen",
-      "done": "IP-Suche abgeschlossen!",
-      "canceled": "IP-Suche abgebrochen!",
-      "ip": "IP",
-      latency: "Latenz",
-      advanced: "Erweitert"
-    },
-    en: {
-      "page-title": "leen | IP Scanner",
-      "header-text": "Free internet is a human right | Women Life Freedom",
-      "defAlert": "With IP Scanner tool, you can search for clean Cloudflare IPs!",
-      "ip-count": "Number of IPs",
-      "max-latency": "Maximum Latency",
-      "include-range": "Ranges to include (eg: 1.1.1.1/24,8.8.8.8/24)",
-      "exclude-range": "Ranges to exclude (eg: 1, 88.25, 41,55)",
-      "expressions": "Regular expression (eg: ^88\\.172\\.|^101\\.)",
-      "dangAlert": "Before you start, turn off your VPN!",
-      "start": "Start",
-      "stop": "Stop",
-      "done": "Searching IP finished!",
-      "canceled": "Searching IP canceled!",
-      "ip": "IP",
-      latency: "Latency",
-      advanced: "Advanced"
-    },
-    fa: {
-      "page-title": "leen | اسکن IP",
-      "header-text": "اینترنت برای همه یا هیچکس",
-      "defAlert": "با ابزار اسکن IP می‌توانید برای IP‌های تمیز Cloudflare جستجو کنید!",
-      "ip-count": "تعداد IP‌ها",
-      "max-latency": "حداکثر تاخیر",
-      "include-range": "محدوده‌های قابل تضمین (مثلاً 1.1.1.1/24، 8.8.8.8/24)",
-      "exclude-range": "محدوده‌های مستثنی (مثلاً 1, 88.25, 41,55)",
-      "expressions": "عبارت منظم (مثلاً ^88\\.172\\.|^101\\.)",
-      "dangAlert": "قبل از شروع، VPN خود را خاموش کنید!",
-      "start": "شروع",
-      "stop": "توقف",
-      "done": "جستجوی IP به اتمام رسید!",
-      "canceled": "جستجوی IP لغو شد!",
-      "ip": "IP",
-      latency: "تاخیر",
-      advanced: "پیشرفته"
-    },
-    fr: {
-      "page-title": "leen | Scanner IP",
-      "header-text": "Internet gratuit est un droit humain | Femmes Vie Liberté",
-      "defAlert": "Avec l'outil de scanner IP, vous pouvez rechercher des IP propres à Cloudflare!",
-      "ip-count": "Nombre d'IP",
-      "max-latency": "Latence maximale",
-      "include-range": "Plages à inclure (ex. : 1.1.1.1/24,8.8.8.8/24)",
-      "exclude-range": "Plages à exclure (ex. : 1, 88.25, 41,55)",
-      "expressions": "Expression régulière (ex. : ^88\\.172\\.|^101\\.)",
-      "dangAlert": "Avant de commencer, désactivez votre VPN !",
-      "start": "Démarrer",
-      "stop": "Arrêter",
-      "done": "Recherche IP terminée !",
-      "canceled": "Recherche IP annulée !",
-      "ip": "IP",
-      latency: "Latence",
-      advanced: "Avancé"
-    },
-    es: {
-      "page-title": "leen | Escáner de IP",
-      "header-text": "El internet libre es un derecho humano | Mujeres Vida Libertad",
-      "defAlert": "Con la herramienta IP Scanner, ¡puedes buscar IPs limpias de Cloudflare!",
-      "ip-count": "Número de IPs",
-      "max-latency": "Latencia máxima",
-      "include-range": "Rangos a incluir (p. ej.: 1.1.1.1/24,8.8.8.8/24)",
-      "exclude-range": "Rangos a excluir (p. ej.: 1, 88.25, 41,55)",
-      "expressions": "Expresión regular (p. ej.: ^88\\.172\\.|^101\\.)",
-      "dangAlert": "¡Antes de comenzar, apaga tu VPN!",
-      "start": "Comenzar",
-      "stop": "Detener",
-      "done": "¡Búsqueda de IP finalizada!",
-      "canceled": "¡Búsqueda de IP cancelada!",
-      "ip": "IP",
-      latency: "Latencia",
-      advanced: "Avanzado"
-    },
-    tr: {
-      "page-title": "leen | IP Tarayıcı",
-      "header-text": "Özgür internet bir insan hakkıdır | Kadınlar Hayat Özgürlük",
-      "defAlert": "IP Tarayıcı aracı ile temiz Cloudflare IP'lerini arayabilirsiniz!",
-      "ip-count": "IP Sayısı",
-      "max-latency": "Maksimum Gecikme",
-      "include-range": "Dahil edilecek aralıklar (örn.: 1.1.1.1/24,8.8.8.8/24)",
-      "exclude-range": "Dışlanacak aralıklar (örn.: 1, 88.25, 41,55)",
-      "expressions": "Düzenli ifade (örn.: ^88\\.172\\.|^101\\.)",
-      "dangAlert": "Başlamadan önce VPN'inizi kapatın!",
-      "start": "Başlat",
-      "stop": "Durdur",
-      "done": "IP arama tamamlandı!",
-      "canceled": "IP arama iptal edildi!",
-      "ip": "IP",
-      latency: "Gecikme",
-      advanced: "Gelişmiş"
-    },
-    ru: {
-      "page-title": "leen | IP-сканер",
-      "header-text": "Свободный интернет — это право человека | Женщины Жизнь Свобода",
-      "defAlert": "С помощью инструмента IP Scanner вы можете искать чистые IP-адреса Cloudflare!",
-      "ip-count": "Количество IP",
-      "max-latency": "Максимальная задержка",
-      "include-range": "Диапазоны для включения (например: 1.1.1.1/24,8.8.8.8/24)",
-      "exclude-range": "Диапазоны для исключения (например: 1, 88.25, 41,55)",
-      "expressions": "Регулярное выражение (например: ^88\\.172\\.|^101\\.)",
-      "dangAlert": "Прежде чем начать, отключите VPN!",
-      "start": "Начать",
-      "stop": "Стоп",
-      "done": "Поиск IP завершён!",
-      "canceled": "Поиск IP отменён!",
-      "ip": "IP",
-      latency: "Задержка",
-      advanced: "Расширенные"
-    },
-    zh: {
-      "page-title": "leen | IP 扫描器",
-      "header-text": "自由互联网是人权 | 女性 生活 自由",
-      "defAlert": "使用 IP Scanner 工具，您可以搜索干净的 Cloudflare IP!",
-      "ip-count": "IP 数量",
-      "max-latency": "最大延迟",
-      "include-range": "要包含的范围（例如：1.1.1.1/24,8.8.8.8/24）",
-      "exclude-range": "要排除的范围（例如：1, 88.25, 41,55）",
-      "expressions": "正则表达式（例如：^88\\.172\\.|^101\\.)",
-      "dangAlert": "开始之前，请关闭您的 VPN！",
-      "start": "开始",
-      "stop": "停止",
-      "done": "IP 搜索完成！",
-      "canceled": "IP 搜索已取消！",
-      "ip": "IP",
-      latency: "延迟",
-      advanced: "高级"
-    }
-  };
+            const startScan = async () => {
+                if (isRunning) return;
+                setIsRunning(true);
+                setResults([]);
+                setStats({ scanned: 0, found: 0 });
+                stopSignal.current = false;
 
-  function changeLanguage(lang) {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
-    document.querySelectorAll('[data-translate]').forEach(el => {
-      const key = el.getAttribute('data-translate');
-      if (translations[lang] && translations[lang][key]) el.textContent = translations[lang][key];
-    });
-    document.querySelectorAll('.lang-switch').forEach(sw => sw.classList.remove('active'));
-    document.querySelector(`.lang-switch[onclick*="${lang}"]`).classList.add('active');
-    localStorage.setItem('lang', lang);
-  }
+                const rangesList = config.ranges.split('\n').filter(r => r.trim().length > 0);
+                let foundCount = 0;
+                let scannedCount = 0;
+                const batchSize = 5; 
 
-  function toggleAdvanced() {
-    const body = document.getElementById('advanced-body');
-    const icon = document.getElementById('adv-icon');
-    body.classList.toggle('collapsed');
-    icon.textContent = body.classList.contains('collapsed') ? '▶' : '▼';
-  }
+                while (!stopSignal.current && foundCount < config.targetCount && scannedCount < config.maxScanLimit) {
+                    const batchIPs = Array.from({ length: batchSize }, () => getRandomIpFromRanges(rangesList));
+                    
+                    const promises = batchIPs.map(async (ip) => {
+                        const ping = await measureLatency(ip);
+                        return { ip, ping };
+                    });
 
-  // init
-  (() => {
-    const saved = localStorage.getItem('lang') || 'fa';
-    changeLanguage(saved);
-  })();
-</script>
+                    const batchResults = await Promise.all(promises);
+
+                    for (const res of batchResults) {
+                        scannedCount++;
+                        if (res.ping !== -1 && res.ping <= config.maxPing) {
+                            foundCount++;
+                            setResults(prev => [...prev, res].sort((a, b) => a.ping - b.ping));
+                        }
+                    }
+
+                    setStats({ scanned: scannedCount, found: foundCount });
+                    await new Promise(r => setTimeout(r, 50));
+                }
+                setIsRunning(false);
+            };
+
+            const stopScan = () => {
+                stopSignal.current = true;
+                setIsRunning(false);
+            };
+
+            const downloadCSV = () => {
+                const csvContent = "data:text/csv;charset=utf-8," 
+                    + "IP,Ping\n" 
+                    + results.map(e => `${e.ip},${e.ping}`).join("\n");
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "cloudflare_ips.csv");
+                document.body.appendChild(link);
+                link.click();
+            };
+
+            return (
+                <div className="min-h-screen p-4 md:p-8 transition-all">
+                    {/* Header */}
+                    <header className="max-w-6xl mx-auto flex justify-between items-center mb-10 border-b border-white/10 pb-4">
+                        <div className="flex items-center gap-3">
+                            <div className="text-accent"><IconShield /></div>
+                            <div>
+                                <h1 className="text-2xl font-bold text-white tracking-wide">{t.title}</h1>
+                                <p className="text-xs text-gray-400 hidden sm:block">{t.subtitle}</p>
+                            </div>
+                        </div>
+                        <button 
+                            onClick={() => setLang(l => l === 'en' ? 'fa' : 'en')}
+                            className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 hover:border-accent hover:text-accent transition-colors text-sm"
+                        >
+                            <IconGlobe />
+                            {t.language}
+                        </button>
+                    </header>
+
+                    <main className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        {/* Settings Panel */}
+                        <section className="lg:col-span-1 space-y-6">
+                            <div className="bg-surface p-6 rounded-xl border border-white/5 shadow-xl">
+                                <div className="flex items-center gap-2 mb-4 text-accent">
+                                    <IconSettings />
+                                    <h2 className="font-bold text-lg">{t.settings}</h2>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="block text-xs text-gray-400 mb-1">{t.ipCount}</label>
+                                        <input type="number" value={config.targetCount} onChange={(e) => setConfig({...config, targetCount: parseInt(e.target.value)})} className="w-full bg-primary border border-white/10 rounded-lg px-3 py-2 focus:border-accent focus:outline-none text-white" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs text-gray-400 mb-1">{t.maxPing}</label>
+                                        <input type="number" value={config.maxPing} onChange={(e) => setConfig({...config, maxPing: parseInt(e.target.value)})} className="w-full bg-primary border border-white/10 rounded-lg px-3 py-2 focus:border-accent focus:outline-none text-white" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs text-gray-400 mb-1">{t.scanLimit}</label>
+                                        <input type="number" value={config.maxScanLimit} onChange={(e) => setConfig({...config, maxScanLimit: parseInt(e.target.value)})} className="w-full bg-primary border border-white/10 rounded-lg px-3 py-2 focus:border-accent focus:outline-none text-white" />
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs text-gray-400 mb-1">{t.ranges}</label>
+                                        <textarea value={config.ranges} onChange={(e) => setConfig({...config, ranges: e.target.value})} rows={5} className="w-full bg-primary border border-white/10 rounded-lg px-3 py-2 focus:border-accent focus:outline-none text-xs font-mono text-white" />
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-3">
+                                {!isRunning ? (
+                                    <button onClick={startScan} className="w-full py-4 bg-accent text-primary font-bold rounded-xl hover:bg-[#b08d55] transition-all flex justify-center items-center gap-2 shadow-lg shadow-accent/20">
+                                        <IconPlay /> {t.start}
+                                    </button>
+                                ) : (
+                                    <button onClick={stopScan} className="w-full py-4 bg-red-500/10 text-red-500 border border-red-500 font-bold rounded-xl hover:bg-red-500 hover:text-white transition-all flex justify-center items-center gap-2">
+                                        <IconStop /> {t.stop}
+                                    </button>
+                                )}
+                            </div>
+                        </section>
+
+                        {/* Results Panel */}
+                        <section className="lg:col-span-2 flex flex-col h-full">
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                                <div className="bg-surface p-4 rounded-lg border border-white/5 text-center">
+                                    <span className="block text-xs text-gray-400 uppercase tracking-wider">{t.status}</span>
+                                    <span className={`block font-bold mt-1 ${isRunning ? 'text-accent animate-pulse' : 'text-white'}`}>{isRunning ? t.scanning : (results.length > 0 ? t.completed : t.idle)}</span>
+                                </div>
+                                <div className="bg-surface p-4 rounded-lg border border-white/5 text-center">
+                                    <span className="block text-xs text-gray-400 uppercase tracking-wider">{t.scanned}</span>
+                                    <span className="block font-bold mt-1 text-white">{stats.scanned}</span>
+                                </div>
+                                <div className="bg-surface p-4 rounded-lg border border-white/5 text-center">
+                                    <span className="block text-xs text-gray-400 uppercase tracking-wider">{t.found}</span>
+                                    <span className="block font-bold mt-1 text-emerald-400">{stats.found}</span>
+                                </div>
+                                <div className="bg-surface p-4 rounded-lg border border-white/5 text-center">
+                                    <span className="block text-xs text-gray-400 uppercase tracking-wider">{t.bestIpChance}</span>
+                                    <span className="block font-bold mt-1 text-accent">ON</span>
+                                </div>
+                            </div>
+
+                            <div className="bg-surface rounded-xl border border-white/5 overflow-hidden flex-grow flex flex-col shadow-2xl h-[500px]">
+                                <div className="p-4 border-b border-white/10 flex justify-between items-center bg-[#252525]">
+                                    <h3 className="font-bold flex items-center gap-2"><IconWifi /> {t.results}</h3>
+                                    {results.length > 0 && (
+                                        <button onClick={downloadCSV} className="text-xs text-accent flex items-center gap-1 hover:underline">
+                                            <IconDownload /> {t.export}
+                                        </button>
+                                    )}
+                                </div>
+                                
+                                <div className="overflow-y-auto flex-grow custom-scrollbar">
+                                    <table className="w-full text-left border-collapse">
+                                        <thead className="bg-[#1E1E1E] sticky top-0 z-10 text-xs uppercase text-gray-400">
+                                            <tr>
+                                                <th className="p-4 font-semibold">{t.ip}</th>
+                                                <th className="p-4 font-semibold text-right">{t.ping}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-white/5 text-sm">
+                                            {results.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan="2" className="p-8 text-center text-gray-500 italic">{t.desc}</td>
+                                                </tr>
+                                            ) : (
+                                                results.map((res, idx) => (
+                                                    <tr key={idx} className="hover:bg-white/5 transition-colors group">
+                                                        <td className="p-4 font-mono text-white group-hover:text-accent transition-colors">{res.ip}</td>
+                                                        <td className="p-4 text-right">
+                                                            <span className={`px-2 py-1 rounded text-xs font-bold ${
+                                                                res.ping < 100 ? 'bg-emerald-500/20 text-emerald-400' : 
+                                                                res.ping < 200 ? 'bg-yellow-500/20 text-yellow-400' : 
+                                                                'bg-red-500/20 text-red-400'
+                                                            }`}>
+                                                                {res.ping} ms
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </main>
+
+                    <footer className="max-w-6xl mx-auto mt-12 text-center text-xs text-gray-600 border-t border-white/5 pt-6">
+                        <p>Cloudflare Scanner | Browser Edition</p>
+                    </footer>
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
 </body>
 </html>
