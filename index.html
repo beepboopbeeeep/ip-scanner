@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr">
 
 <head>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous" />
-
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   <link href="./assets/css/vazir.css" rel="stylesheet" />
   <link href="./assets/css/style.css" rel="stylesheet" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -17,220 +17,637 @@
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  
+  <style>
+    :root {
+      --primary-color: #C7A46C;
+      --dark-bg: #1E1E1E;
+      --darker-bg: #171717;
+      --light-text: #F0F0F0;
+      --card-bg: #252525;
+      --border-color: #3A3A3A;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: var(--light-text);
+      font-family: 'Vazir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+    }
+
+    .glass-card {
+      background: rgba(37, 37, 37, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      padding: 1.5rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar {
+      background: linear-gradient(135deg, var(--darker-bg) 0%, #2a2a2a 100%);
+      border-bottom: 2px solid var(--primary-color);
+      padding: 1rem 0;
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 4px 20px rgba(199, 164, 108, 0.15);
+    }
+
+    .nav-tabs {
+      border-bottom: 2px solid var(--border-color);
+      border-radius: 15px 15px 0 0;
+      overflow: hidden;
+    }
+
+    .nav-tabs .nav-link {
+      color: var(--light-text);
+      border: none;
+      border-radius: 15px 15px 0 0;
+      padding: 12px 24px;
+      transition: all 0.3s ease;
+      background: transparent;
+    }
+
+    .nav-tabs .nav-link:hover {
+      background: rgba(199, 164, 108, 0.1);
+    }
+
+    .nav-tabs .nav-link.active {
+      background: var(--primary-color);
+      color: var(--darker-bg);
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(199, 164, 108, 0.3);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #b8944c 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(199, 164, 108, 0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(199, 164, 108, 0.3);
+      background: linear-gradient(135deg, #d4b67e 0%, var(--primary-color) 100%);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 12px 24px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-danger:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+    }
+
+    .form-control {
+      background-color: var(--card-bg);
+      border: 2px solid var(--border-color);
+      border-radius: 12px;
+      color: var(--light-text);
+      padding: 12px 16px;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      background-color: var(--card-bg);
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(199, 164, 108, 0.2);
+      color: var(--light-text);
+    }
+
+    .form-floating label {
+      color: #aaa;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .form-switch .form-check-input {
+      width: 3.5em;
+      height: 1.8em;
+      background-color: var(--border-color);
+      border-color: var(--border-color);
+      border-radius: 2em;
+      cursor: pointer;
+    }
+
+    .form-switch .form-check-input:checked {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .alert {
+      border-radius: 15px;
+      border: none;
+      padding: 1rem 1.25rem;
+    }
+
+    .alert-primary {
+      background: rgba(199, 164, 108, 0.1);
+      border-left: 4px solid var(--primary-color);
+      color: var(--light-text);
+    }
+
+    .alert-danger {
+      background: rgba(220, 53, 69, 0.1);
+      border-left: 4px solid #dc3545;
+      color: var(--light-text);
+    }
+
+    .table {
+      background-color: var(--card-bg);
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .table thead {
+      background: linear-gradient(135deg, var(--primary-color) 0%, #b8944c 100%);
+      color: var(--darker-bg);
+    }
+
+    .table th {
+      border: none;
+      padding: 1rem;
+      font-weight: 600;
+    }
+
+    .table td {
+      border-color: var(--border-color);
+      padding: 1rem;
+      vertical-align: middle;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+      background-color: rgba(199, 164, 108, 0.05);
+    }
+
+    .table-striped tbody tr:hover {
+      background-color: rgba(199, 164, 108, 0.1);
+      transform: translateX(5px);
+      transition: all 0.3s ease;
+    }
+
+    .dropdown-menu {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .dropdown-item {
+      color: var(--light-text);
+      border-radius: 10px;
+      margin: 2px 8px;
+      padding: 8px 12px;
+      transition: all 0.3s ease;
+    }
+
+    .dropdown-item:hover {
+      background-color: var(--primary-color);
+      color: var(--darker-bg);
+      transform: translateX(5px);
+    }
+
+    .footer {
+      background: linear-gradient(135deg, var(--darker-bg) 0%, #2a2a2a 100%);
+      border-top: 2px solid var(--primary-color);
+      border-radius: 20px 20px 0 0;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+
+    .footer a {
+      color: var(--primary-color);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      padding: 8px 16px;
+      border-radius: 10px;
+    }
+
+    .footer a:hover {
+      background-color: rgba(199, 164, 108, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .progress {
+      height: 8px;
+      border-radius: 4px;
+      background-color: var(--border-color);
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, var(--primary-color) 0%, #d4b67e 100%);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .status-badge {
+      background: var(--primary-color);
+      color: var(--darker-bg);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .floating-action {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: var(--primary-color);
+      color: var(--darker-bg);
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 20px rgba(199, 164, 108, 0.3);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 1000;
+    }
+
+    .floating-action:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 25px rgba(199, 164, 108, 0.4);
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 15px;
+      }
+      
+      .navbar h1 {
+        font-size: 1.5rem;
+      }
+      
+      .table-responsive {
+        border-radius: 15px;
+      }
+    }
+
+    /* Modern scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--darker-bg);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary-color);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #d4b67e;
+    }
+  </style>
 </head>
 
 <body data-bs-theme="dark">
-  <nav class="navbar" id="nav">
+  <nav class="navbar">
     <div class="container-fluid">
-
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
-          onclick="toggleTheme()" checked>
-        <label class="form-check-label" for="flexSwitchCheckChecked" style="color: #fff;" data-translate="darkmode">Dark
-          Mode</label>
+      <div class="d-flex align-items-center">
+        <div class="form-check form-switch me-3">
+          <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+            onclick="toggleTheme()" checked>
+          <label class="form-check-label" for="flexSwitchCheckChecked" style="color: #fff;" data-translate="darkmode">
+            <i class="fas fa-moon me-2"></i>Dark Mode
+          </label>
+        </div>
       </div>
 
-
-      <h1 data-translate="header-text"></h1><img src="assets/img/brandpic.png" width="50" height="29" alt="">
+      <div class="d-flex align-items-center">
+        <div class="brand-logo me-3">
+          <div style="width: 40px; height: 40px; background: var(--primary-color); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-shield-alt" style="color: var(--darker-bg); font-size: 1.2rem;"></i>
+          </div>
+        </div>
+        <h1 class="mb-0" data-translate="header-text" style="color: var(--light-text);">Clean IP Scanner</h1>
+      </div>
 
       <div class="dropdown">
-        <a type="button" class="btn btn-secondary dropdown-toggle" id="dropdown" data-bs-toggle="dropdown"
-          aria-haspopup="true" aria-expanded="false">
+        <a type="button" class="btn btn-secondary dropdown-toggle d-flex align-items-center" id="dropdown" data-bs-toggle="dropdown"
+          aria-haspopup="true" aria-expanded="false" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px;">
+          <i class="fas fa-globe me-2"></i>
           <small data-translate="language">Language</small>
-          <img src="./assets/img/language-translate-speech-bubbles-icon.svg" class="img-lang" />
         </a>
 
-        <ul class="dropdown-menu">
+        <ul class="dropdown-menu dropdown-menu-end">
           <li>
-            <a class="dropdown-item" onclick="changeLanguage('en')">English 🇬🇧</a>
+            <a class="dropdown-item" onclick="changeLanguage('en')">
+              <span class="me-2">🇬🇧</span>English
+            </a>
+          </li>
+          <li><hr class="dropdown-divider" style="border-color: var(--border-color);"></li>
+          <li>
+            <a class="dropdown-item" onclick="changeLanguage('de')">
+              <span class="me-2">🇩🇪</span>Deutsch
+            </a>
           </li>
           <li>
-            <a class="dropdown-item" onclick="changeLanguage('de')">Deutsch 🇩🇪</a>
+            <a class="dropdown-item" onclick="changeLanguage('fa')">
+              <span class="me-2">🇮🇷</span>فارسی
+            </a>
           </li>
           <li>
-            <a class="dropdown-item" onclick="changeLanguage('fa')">فارسی 🇮🇷</a>
+            <a class="dropdown-item" onclick="changeLanguage('fr')">
+              <span class="me-2">🇫🇷</span>Française
+            </a>
           </li>
           <li>
-            <a class="dropdown-item" onclick="changeLanguage('fr')">Française 🇫🇷</a>
+            <a class="dropdown-item" onclick="changeLanguage('tr')">
+              <span class="me-2">🇹🇷</span>Türkçe
+            </a>
           </li>
           <li>
-            <a class="dropdown-item" onclick="changeLanguage('tr')">Türkçe 🇹🇷</a>
+            <a class="dropdown-item" onclick="changeLanguage('es')">
+              <span class="me-2">🇪🇸</span>Español
+            </a>
           </li>
           <li>
-            <a class="dropdown-item" onclick="changeLanguage('es')">Español 🇪🇸</a>
-          </li>
-
-          <li>
-            <a class="dropdown-item" onclick="changeLanguage('zh')">中文 🇨🇳</a>
+            <a class="dropdown-item" onclick="changeLanguage('zh')">
+              <span class="me-2">🇨🇳</span>中文
+            </a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <div class="container col-md-8" id="content">
-
-
-    <div class="tabs">
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link" href="/xray-fragmenter/">Xray Fragmenter</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-translate="clean-ip-scanner" ></a>
-        </li>
-
-      </ul>
-    </div>
-
-    <div class="alert alert-primary d-flex align-items-center" id="defAlert" data-translate="defAlert"></div>
-
-    <div class="orClass"></div>
-
-    <div class="clearfix"></div>
-
-
-
-    <div class="row g-3 mb-3">
-
-      <div class="col-md-6">
-        <div class="form-floating">
-          <input class="form-control" type="number" id="max-ip" min="1" max="5000" value="5" placeholder="ip-count" />
-          <label for="floatingInputGroup2" data-translate="ip-count"></label>
-        </div>
+  <div class="container col-xxl-10 col-xl-12 col-lg-12" id="content" style="padding-top: 2rem; padding-bottom: 4rem;">
+    <div class="glass-card mb-4">
+      <div class="tabs">
+        <ul class="nav nav-tabs">
+          <li class="nav-item">
+            <a class="nav-link" href="/xray-fragmenter/">
+              <i class="fas fa-code-branch me-2"></i>
+              Xray Fragmenter
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">
+              <i class="fas fa-search me-2"></i>
+              <span data-translate="clean-ip-scanner"></span>
+            </a>
+          </li>
+        </ul>
       </div>
 
-      <div class="col-md-6">
-        <div class="form-floating">
-          <input type="number" class="form-control" id="max-latency" min="50" max="3000" step="50" value="500"
-            placeholder="Maximum Latency" min="0" />
-          <label for="floatingInputGroup2" data-translate="max-latency"></label>
-        </div>
-      </div>
-    </div>
-
-    <div class="row g-3 mb-3">
-
-      <div class="col-md-6">
-        <div class="form-floating">
-          <input class="form-control" type="text" id="ip-include"
-            placeholder="Ranges to include (eg: 1.1.1.1/24,8,8,8,8/24)" />
-          <label for="floatingInputGroup2" data-translate="include-range"></label>
-        </div>
-      </div>
-
-      <div class="col-md-6">
-        <div class="form-floating">
-          <input type="text" class="form-control" id="ip-exclude"
-            placeholder="Ranges to exclude (eg: 1, 88.25, 41,55" />
-          <label for="floatingInputGroup2" data-translate="exclude-range"></label>
-        </div>
-      </div>
-    </div>
-
-
-    <div class="row g-3 mb-3">
-
-      <div class="col-md-12">
-        <div class="form-floating">
-          <input class="form-control" type="text" id="ip-regex"
-            placeholder="Regular expression (eg: ^88\.172\.|^101\.)" />
-          <label for="floatingInputGroup2" data-translate="expressions"></label>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="alert alert-danger d-flex align-items-center" id="defAlert" data-translate="dangAlert"></div>
-
-
-    <div class="d-grid gap-2">
-      <button class="btn btn-primary" type="button" id="btn-start" data-translate="start" onclick="startScan()"
-        disabled></button>
-      <button class="btn btn-danger" type="button" id="btn-cancel" data-translate="stop" onclick="cancelScan()"
-        disabled></button>
-    </div>
-
-
-    <div class="clearfix"></div>
-
-
-    <div class="table-form none" id="TableForm">
-      <div class="modal fade" id="ip-ranges-modal" tabindex="-1" aria-labelledby="ip-ranges-modal-label"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="ip-ranges-modal-label">
-                <span class="lang-field">IP ranges</span>
-              </h5>
+      <div class="row mt-4">
+        <div class="col-12">
+          <div class="alert alert-primary d-flex align-items-center" id="defAlert" data-translate="defAlert">
+            <i class="fas fa-info-circle me-3" style="font-size: 1.5rem;"></i>
+            <div>
+              <strong>Information:</strong> This tool helps you scan and find clean IP addresses with low latency.
             </div>
-
-
           </div>
         </div>
       </div>
 
+      <div class="row g-4 mt-2">
+        <div class="col-xl-6">
+          <div class="card border-0" style="background: var(--darker-bg); border-radius: 15px;">
+            <div class="card-body">
+              <h5 class="card-title" style="color: var(--primary-color);">
+                <i class="fas fa-sliders-h me-2"></i>Scan Settings
+              </h5>
+              
+              <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input class="form-control" type="number" id="max-ip" min="1" max="5000" value="5" placeholder="ip-count" />
+                    <label for="max-ip" data-translate="ip-count">
+                      <i class="fas fa-hashtag me-2"></i>IP Count
+                    </label>
+                  </div>
+                </div>
 
-      <div class="row my-2 border-bottom border-dark py-3">
-        <div id="test-no"></div><br>
-        <div class="col col-xs-6 col-lg-3 py-1" id="ip-no"></div>
-        <div class="col col-xs-1 col-lg-1 py-1" id="ip-try"></div>
-        <div class="col col-xs-3 col-lg-2 py-1" id="ip-latency"></div>
-      </div>
-
-
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th width="35">
-              #
-            </th>
-            <th style="min-width: 150px;">
-              <span class="lang-field" data-translate="ip">IP</span>
-            </th>
-            <th>
-              <span class="lang-field" data-translate="latency">Latency</span>
-            </th>
-            <th width="70">
-              <div class="btn-group" role="group" dir="ltr" data-bs-theme="dark">
-                <button class="btn btn-primary btn-sm" onclick="downloadAsCSV()">
-                  <img height="20px" src="assets/img/icon-csv.png" class="dark-pic" /></button>
-                <button class="btn btn-primary btn-sm" onclick="downloadAsJSON()">
-                  <img height="20px" src="assets/img/icon-json.png" class="dark-pic" /></button>
-                <button class="btn btn-primary btn-sm" onclick="copyAllToClipboard()">
-                  <img height="20px" src="assets/img/icon-copy.png" class="dark-pic" /></button>
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="number" class="form-control" id="max-latency" min="50" max="3000" step="50" value="500"
+                      placeholder="Maximum Latency" />
+                    <label for="max-latency" data-translate="max-latency">
+                      <i class="fas fa-tachometer-alt me-2"></i>Max Latency (ms)
+                    </label>
+                  </div>
+                </div>
               </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody id="result">
-        </tbody>
-      </table>
+
+              <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input class="form-control" type="text" id="ip-include"
+                      placeholder="Ranges to include (eg: 1.1.1.1/24,8,8,8,8/24)" />
+                    <label for="ip-include" data-translate="include-range">
+                      <i class="fas fa-plus-circle me-2"></i>Include Range
+                    </label>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-floating">
+                    <input type="text" class="form-control" id="ip-exclude"
+                      placeholder="Ranges to exclude (eg: 1, 88.25, 41,55)" />
+                    <label for="ip-exclude" data-translate="exclude-range">
+                      <i class="fas fa-minus-circle me-2"></i>Exclude Range
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row g-3 mt-3">
+                <div class="col-12">
+                  <div class="form-floating">
+                    <input class="form-control" type="text" id="ip-regex"
+                      placeholder="Regular expression (eg: ^88\.172\.|^101\.)" />
+                    <label for="ip-regex" data-translate="expressions">
+                      <i class="fas fa-filter me-2"></i>Filter Regex
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-6">
+          <div class="card border-0" style="background: var(--darker-bg); border-radius: 15px; height: 100%;">
+            <div class="card-body d-flex flex-column">
+              <h5 class="card-title" style="color: var(--primary-color);">
+                <i class="fas fa-play-circle me-2"></i>Scan Control
+              </h5>
+              
+              <div class="alert alert-danger d-flex align-items-center mt-3" id="dangAlert" data-translate="dangAlert">
+                <i class="fas fa-exclamation-triangle me-3"></i>
+                <div>
+                  <strong>Warning:</strong> Please use this tool responsibly and in compliance with applicable laws.
+                </div>
+              </div>
+
+              <div class="mt-auto">
+                <div class="d-grid gap-3">
+                  <button class="btn btn-primary btn-lg" type="button" id="btn-start" data-translate="start" onclick="startScan()"
+                    disabled>
+                    <i class="fas fa-play me-2"></i>Start Scan
+                  </button>
+                  <button class="btn btn-danger btn-lg" type="button" id="btn-cancel" data-translate="stop" onclick="cancelScan()"
+                    disabled>
+                    <i class="fas fa-stop me-2"></i>Stop Scan
+                  </button>
+                </div>
+
+                <div class="progress mt-4 d-none" id="scan-progress">
+                  <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                </div>
+
+                <div class="text-center mt-3" id="scan-status">
+                  <span class="status-badge">Ready</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="clearfix"></div>
-    <br />
-
-    <hr />
-
-    <footer>
-      <div class="text-center">
-        <p data-translate="footer-text"></p>
-
-        <a href="https://github.com/drunkleen">GitHub</a>
-
+    <div class="glass-card mt-4 d-none" id="results-section">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 style="color: var(--primary-color);">
+          <i class="fas fa-list-ul me-2"></i>Scan Results
+        </h3>
+        <div class="btn-group" role="group">
+          <button class="btn btn-primary" onclick="downloadAsCSV()">
+            <i class="fas fa-file-csv me-2"></i>CSV
+          </button>
+          <button class="btn btn-primary" onclick="downloadAsJSON()">
+            <i class="fas fa-file-code me-2"></i>JSON
+          </button>
+          <button class="btn btn-primary" onclick="copyAllToClipboard()">
+            <i class="fas fa-copy me-2"></i>Copy All
+          </button>
+        </div>
       </div>
-      <br />
 
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
-      <script src="./assets/js/jquery.min.js"></script>
-      <script src="./assets/js/script.js"></script>
-      <script src="./assets/js/utils.js"></script>
-    </footer>
+      <div class="table-responsive">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th width="50" class="text-center">#</th>
+              <th style="min-width: 200px;">
+                <i class="fas fa-network-wired me-2"></i>
+                <span data-translate="ip">IP Address</span>
+              </th>
+              <th>
+                <i class="fas fa-tachometer-alt me-2"></i>
+                <span data-translate="latency">Latency</span>
+              </th>
+              <th class="text-center" width="100">Status</th>
+              <th width="120" class="text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="result">
+            <!-- Results will be populated here -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="text-center mt-4" id="no-results" style="display: none;">
+        <i class="fas fa-search" style="font-size: 3rem; color: var(--border-color); margin-bottom: 1rem;"></i>
+        <h5>No results yet</h5>
+        <p class="text-muted">Start a scan to see results here</p>
+      </div>
+    </div>
+
+    <div class="footer text-center mt-5">
+      <p data-translate="footer-text" class="mb-3">
+        Made with <i class="fas fa-heart" style="color: var(--primary-color);"></i> by the community
+      </p>
+      
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="https://github.com/drunkleen" class="btn btn-outline-primary" style="border-color: var(--primary-color); color: var(--primary-color);">
+          <i class="fab fa-github me-2"></i>GitHub
+        </a>
+        <a href="#" class="btn btn-outline-primary" style="border-color: var(--primary-color); color: var(--primary-color);">
+          <i class="fas fa-book me-2"></i>Documentation
+        </a>
+        <a href="#" class="btn btn-outline-primary" style="border-color: var(--primary-color); color: var(--primary-color);">
+          <i class="fas fa-question-circle me-2"></i>Help
+        </a>
+      </div>
+    </div>
   </div>
+
+  <!-- Floating Action Button -->
+  <div class="floating-action" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+    <i class="fas fa-arrow-up"></i>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="./assets/js/jquery.min.js"></script>
+  <script src="./assets/js/script.js"></script>
+  <script src="./assets/js/utils.js"></script>
+  
+  <script>
+    // Sample JavaScript for interaction
+    document.addEventListener('DOMContentLoaded', function() {
+      // Enable start button when all required fields are filled
+      const startBtn = document.getElementById('btn-start');
+      const maxIp = document.getElementById('max-ip');
+      
+      function checkForm() {
+        if (maxIp.value && maxIp.value > 0) {
+          startBtn.disabled = false;
+        } else {
+          startBtn.disabled = true;
+        }
+      }
+      
+      maxIp.addEventListener('input', checkForm);
+      checkForm();
+    });
+    
+    // Simulate scan progress
+    function simulateScan() {
+      const progressBar = document.getElementById('scan-progress');
+      const scanStatus = document.getElementById('scan-status');
+      const resultsSection = document.getElementById('results-section');
+      const noResults = document.getElementById('no-results');
+      
+      if (progressBar) {
+        progressBar.classList.remove('d-none');
+        let width = 0;
+        const interval = setInterval(() => {
+          if (width >= 100) {
+            clearInterval(interval);
+            progressBar.classList.add('d-none');
+            scanStatus.innerHTML = '<span class="status-badge">Completed</span>';
+            resultsSection.classList.remove('d-none');
+            noResults.style.display = 'none';
+          } else {
+            width += 10;
+            progressBar.querySelector('.progress-bar').style.width = width + '%';
+          }
+        }, 500);
+      }
+    }
+  </script>
 </body>
 
 </html>
