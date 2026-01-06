@@ -1,520 +1,414 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa" dir="ltr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern IP Scanner | DrunkLeen</title>
-    
-    <!-- React & ReactDOM -->
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    
-    <!-- Babel for JSX -->
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Font Awesome (Icons) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Google Fonts (Vazirmatn for Persian support) -->
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title data-translate="page-title">leen | IP Scanner</title>
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'Vazirmatn', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            gold: '#C7A46C',
-                            dark: '#1E1E1E',
-                            card: '#252525',
-                            hover: '#D4B07E'
-                        }
-                    },
-                    backgroundImage: {
-                        'brand-gradient': 'linear-gradient(135deg, #1E1E1E 0%, #2a2a2a 100%)',
-                        'gold-gradient': 'linear-gradient(135deg, #C7A46C 0%, #a3814f 100%)',
-                    }
-                }
-            }
-        }
-    </script>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-    <style>
-        body {
-            background-color: #1E1E1E;
-            color: #e5e5e5;
-            overflow-x: hidden;
-        }
-        
-        /* Glassmorphism Classes */
-        .glass-panel {
-            background: rgba(37, 37, 37, 0.6);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(199, 164, 108, 0.1);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-        }
+  <!-- Vazirmatn Font (Persian) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet">
 
-        .gold-glow {
-            box-shadow: 0 0 15px rgba(199, 164, 108, 0.2);
-        }
+  <!-- Custom Styles -->
+  <style>
+    :root {
+      --clr-gold: #C7A46C;
+      --clr-dark: #1E1E1EFF;
+      --gradient-bg: linear-gradient(135deg, #1E1E1EFF 0%, #121212 100%);
+    }
+    body {
+      font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--gradient-bg);
+      color: #f5f5f5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .navbar {
+      background: rgba(30,30,30,.85) !important;
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(199,164,108,.25);
+    }
+    .btn-primary {
+      background: var(--clr-gold);
+      border: none;
+      font-weight: 600;
+      transition: transform .2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      background: #b8965a;
+    }
+    .btn-secondary {
+      background: rgba(199,164,108,.15);
+      border: 1px solid var(--clr-gold);
+      color: var(--clr-gold);
+    }
+    .btn-secondary:hover {
+      background: rgba(199,164,108,.25);
+      color: #fff;
+    }
+    .form-control, .form-select {
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.15);
+      color: #fff;
+    }
+    .form-control:focus, .form-select:focus {
+      background: rgba(255,255,255,.12);
+      border-color: var(--clr-gold);
+      box-shadow: 0 0 0 .2rem rgba(199,164,108,.35);
+    }
+    .table-dark {
+      --bs-table-bg: rgba(30,30,30,.7);
+      --bs-table-border-color: rgba(255,255,255,.1);
+    }
+    .progress {
+      height: 6px;
+    }
+    .progress-bar {
+      background: var(--clr-gold);
+    }
+    footer {
+      margin-top: auto;
+      text-align: center;
+      font-size: .8rem;
+      color: rgba(255,255,255,.55);
+      padding: 2rem 0 1rem;
+    }
+    footer a {
+      color: var(--clr-gold);
+      text-decoration: none;
+    }
+    .lang-switch {
+      cursor: pointer;
+      padding: .25rem .5rem;
+      border-radius: .25rem;
+      transition: background .2s;
+    }
+    .lang-switch:hover {
+      background: rgba(255,255,255,.1);
+    }
+    .lang-switch.active {
+      background: var(--clr-gold);
+      color: #000;
+      font-weight: 600;
+    }
+    .advanced-toggle {
+      cursor: pointer;
+      user-select: none;
+      font-weight: 600;
+      color: var(--clr-gold);
+    }
+    .advanced-body {
+      max-height: 500px;
+      overflow: hidden;
+      transition: max-height .4s ease;
+    }
+    .advanced-body.collapsed {
+      max-height: 0;
+    }
+  </style>
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1E1E1E; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #333; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #C7A46C; 
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-    </style>
+  <meta name="keywords" content="cloudflare, ip scanner, free internet, v2ray, xray">
+  <meta name="robots" content="index,follow">
+  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
 </head>
-<body class="antialiased selection:bg-brand-gold selection:text-white">
+<body data-bs-theme="dark">
 
-    <div id="root" class="min-h-screen flex flex-col"></div>
+<nav class="navbar navbar-dark sticky-top">
+  <div class="container-fluid justify-content-between align-items-center">
+    <div class="d-flex gap-2">
+      <span class="lang-switch active" onclick="changeLanguage('fa')">فا</span>
+      <span class="lang-switch" onclick="changeLanguage('en')">EN</span>
+      <span class="lang-switch" onclick="changeLanguage('de')">DE</span>
+      <span class="lang-switch" onclick="changeLanguage('fr')">FR</span>
+      <span class="lang-switch" onclick="changeLanguage('es')">ES</span>
+      <span class="lang-switch" onclick="changeLanguage('tr')">TR</span>
+      <span class="lang-switch" onclick="changeLanguage('ru')">RU</span>
+      <span class="lang-switch" onclick="changeLanguage('zh')">中文</span>
+    </div>
+    <h5 class="mb-0" data-translate="header-text">اینترنت برای همه یا هیچکس</h5>
+    <div></div>
+  </div>
+</nav>
 
-    <!-- React Application Code -->
-    <script type="text/babel">
-        const { useState, useEffect, useRef, useMemo } = React;
+<main class="container py-4 flex-grow-1">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-10 col-lg-8">
 
-        // --- Translations (Simplified) ---
-        const translations = {
-            en: { title: "Modern IP Scanner", start: "Start Scan", stop: "Cancel", advanced: "Advanced Settings", maxIP: "Max IPs", maxLatency: "Max Latency (ms)", regex: "Regex Filter", include: "Include Range", exclude: "Exclude Range", status: "Status", ip: "IP Address", latency: "Latency", action: "Actions", finished: "Scan Finished", canceled: "Scan Canceled", scanning: "Scanning...", noResults: "No clean IPs found in range." },
-            fa: { title: "اسکنر IP مدرن", start: "شروع اسکن", stop: "لغو", advanced: "تنظیمات پیشرفته", maxIP: "تعداد آی‌پی", maxLatency: "حداکثر پینگ (میلی ثانیه)", regex: "فیلتر Regex", include: "محدوده شامل", exclude: "محدوده مستثنی", status: "وضعیت", ip: "آدرس IP", latency: "پینگ", action: "عملیات", finished: "اسکن تمام شد", canceled: "اسکن لغو شد", scanning: "در حال اسکن...", noResults: "هیچ آی‌پی پاکی در این بازه یافت نشد." }
-        };
+      <div class="alert alert-primary d-flex align-items-center" id="defAlert"></div>
 
-        // --- Main Component ---
-        function App() {
-            const [lang, setLang] = useState('fa');
-            const t = translations[lang];
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label" data-translate="ip-count"></label>
+          <input class="form-control" type="number" id="max-ip" min="1" max="5000" value="20">
+        </div>
+        <div class="col-md-6">
+          <label class="form-label" data-translate="max-latency"></label>
+          <input type="number" class="form-control" id="max-latency" min="50" max="3000" step="50" value="400">
+        </div>
+      </div>
 
-            // Settings State
-            const [maxIP, setMaxIP] = useState(20);
-            const [maxLatency, setMaxLatency] = useState(400);
-            const [regex, setRegex] = useState('');
-            const [include, setInclude] = useState('');
-            const [exclude, setExclude] = useState('');
-            const [isAdvancedOpen, setIsAdvancedOpen] = useState(true); // Default Open as requested
+      <div class="mb-3">
+        <div class="advanced-toggle d-flex align-items-center gap-2" onclick="toggleAdvanced()">
+          <span>⚙️</span>
+          <span data-translate="advanced">Advanced</span>
+          <span id="adv-icon">▼</span>
+        </div>
+        <div id="advanced-body" class="advanced-body">
+          <div class="row g-3 pt-3">
+            <div class="col-md-6">
+              <label class="form-label" data-translate="include-range"></label>
+              <input class="form-control" type="text" id="ip-include" placeholder="1.1.1.1/24,8.8.8.8/24">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label" data-translate="exclude-range"></label>
+              <input type="text" class="form-control" id="ip-exclude" placeholder="1, 88.25, 41,55">
+            </div>
+          </div>
+          <div class="row g-3 pt-3">
+            <div class="col-12">
+              <label class="form-label" data-translate="expressions"></label>
+              <input class="form-control" type="text" id="ip-regex" placeholder="^88\.172\.|^101\.">
+            </div>
+          </div>
+        </div>
+      </div>
 
-            // Scan State
-            const [isScanning, setIsScanning] = useState(false);
-            const [results, setResults] = useState([]);
-            const [currentStatus, setCurrentStatus] = useState({ msg: "Ready", ip: "", active: false });
-            const [ipRanges, setIpRanges] = useState([]);
-            const [csvData, setCsvData] = useState('');
+      <div class="alert alert-danger d-flex align-items-center" data-translate="dangAlert"></div>
 
-            // Load IP Data on Mount
-            useEffect(() => {
-                fetch('./assets/ipv4.txt')
-                    .then(res => {
-                        if (!res.ok) throw new Error("File not found");
-                        return res.text();
-                    })
-                    .then(text => {
-                        const ips = text.split("\n")
-                            .map(line => line.trim())
-                            .filter(line => line && !line.startsWith('//'));
-                        setIpRanges(ips);
-                    })
-                    .catch(err => {
-                        console.error("Error loading ipv4.txt:", err);
-                        // Fallback for demo if file not found (embedded sample)
-                        const sample = [
-                            "5.226.179.0/24", "23.227.38.0/24", "31.22.116.0/24", "45.8.104.0/24", 
-                            "104.16.0.0/24", "172.64.0.0/24", "185.16.110.0/24"
-                        ];
-                        setIpRanges(sample);
-                    });
-            }, []);
+      <div class="d-grid gap-2">
+        <button class="btn btn-primary" id="btn-start" onclick="startScan()" disabled></button>
+        <button class="btn btn-danger" id="btn-cancel" onclick="cancelScan()" disabled></button>
+      </div>
 
-            // Helper Functions (Ported from original script.js)
-            const isCIDR = (cidr) => /^([0-9]{1,3}\.){3}[0-9]{1,3}\/(16|17|18|19|20|21|22|23|24)$/.test(cidr);
-            
-            const cidrToRandomIPArray = (cidr) => {
-                // Simplified random generation for demo purposes to keep code small
-                // Original logic splits to /24s and generates random hosts
-                // Here we implement a basic version
-                const [base, mask] = cidr.split('/');
-                const parts = base.split('.');
-                let ips = [];
-                for(let i=0; i<30; i++) {
-                    const lastPart = Math.floor(Math.random() * 254) + 1;
-                    ips.push(`${parts[0]}.${parts[1]}.${parts[2]}.${lastPart}`);
-                }
-                return ips;
-            };
+      <div id="TableForm" class="none mt-4">
+        <div class="row my-2 border-bottom border-dark py-3">
+          <div id="test-no"></div>
+          <div class="col col-xs-6 col-lg-3 py-1" id="ip-no"></div>
+          <div class="col col-xs-1 col-lg-1 py-1" id="ip-try"></div>
+          <div class="col col-xs-3 col-lg-2 py-1" id="ip-latency"></div>
+        </div>
 
-            const processIPs = () => {
-                let ips = [];
-                let regexFilter = null;
-                let excludeFilter = null;
+        <div class="table-responsive">
+          <table class="table table-dark table-striped align-middle">
+            <thead>
+              <tr>
+                <th width="35">#</th>
+                <th data-translate="ip"></th>
+                <th data-translate="latency"></th>
+                <th width="70">
+                  <div class="btn-group" role="group">
+                    <button class="btn btn-secondary btn-sm" onclick="downloadAsCSV()">
+                      <img height="20" src="assets/img/icon-csv.png" alt="CSV">
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="downloadAsJSON()">
+                      <img height="20" src="assets/img/icon-json.png" alt="JSON">
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="copyAllToClipboard()">
+                      <img height="20" src="assets/img/icon-copy.png" alt="Copy">
+                    </button>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="result"></tbody>
+          </table>
+        </div>
+      </div>
 
-                if (regex) regexFilter = new RegExp(regex);
-                if (exclude) excludeFilter = new RegExp(exclude.split(',').map(c => '^'+c.replace('.','\\.').replace('/','\\/')).join('|'));
+    </div>
+  </div>
+</main>
 
-                let rangesToScan = ipRanges;
-                if (include) {
-                    rangesToScan = ipRanges.filter(r => r.startsWith(include));
-                }
+<footer>
+  <p>© NajiDevs - 2025 All rights reserved. No part of this website may be reproduced, distributed, or transmitted in any form or by any means without the prior written permission of the owner.</p>
+  <a class="btn btn-sm btn-outline-light mt-2" href="https://github.com/naajidevs">NaajiDevs</a>
+</footer>
 
-                rangesToScan.forEach(cidr => {
-                    if (regexFilter && !regexFilter.test(cidr)) return;
-                    if (excludeFilter && excludeFilter.test(cidr)) return;
-                    ips = ips.concat(cidrToRandomIPArray(cidr));
-                });
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="./assets/js/jquery.min.js"></script>
+<script src="./assets/js/script.js"></script>
+<script>
+  const translations = {
+    de: {
+      "page-title": "leen | IP Scanner",
+      "header-text": "Freies Internet ist ein Menschenrecht | Frauen Leben Freiheit",
+      "defAlert": "Mit dem IP-Scanner-Tool können Sie nach sauberen Cloudflare-IPs suchen!",
+      "ip-count": "Anzahl der IPs",
+      "max-latency": "Maximale Latenz",
+      "include-range": "Bereiche zum Einbeziehen (z. B.: 1.1.1.1/24,8.8.8.8/24)",
+      "exclude-range": "Bereiche zum Ausschließen (z. B.: 1, 88.25, 41,55)",
+      "expressions": "Regulärer Ausdruck (z. B.: ^88\\.172\\.|^101\\.)",
+      "dangAlert": "Bevor Sie beginnen, schalten Sie Ihr VPN aus!",
+      "start": "Starten",
+      "stop": "Stoppen",
+      "done": "IP-Suche abgeschlossen!",
+      "canceled": "IP-Suche abgebrochen!",
+      "ip": "IP",
+      latency: "Latenz",
+      advanced: "Erweitert"
+    },
+    en: {
+      "page-title": "leen | IP Scanner",
+      "header-text": "Free internet is a human right | Women Life Freedom",
+      "defAlert": "With IP Scanner tool, you can search for clean Cloudflare IPs!",
+      "ip-count": "Number of IPs",
+      "max-latency": "Maximum Latency",
+      "include-range": "Ranges to include (eg: 1.1.1.1/24,8.8.8.8/24)",
+      "exclude-range": "Ranges to exclude (eg: 1, 88.25, 41,55)",
+      "expressions": "Regular expression (eg: ^88\\.172\\.|^101\\.)",
+      "dangAlert": "Before you start, turn off your VPN!",
+      "start": "Start",
+      "stop": "Stop",
+      "done": "Searching IP finished!",
+      "canceled": "Searching IP canceled!",
+      "ip": "IP",
+      latency: "Latency",
+      advanced: "Advanced"
+    },
+    fa: {
+      "page-title": "leen | اسکن IP",
+      "header-text": "اینترنت برای همه یا هیچکس",
+      "defAlert": "با ابزار اسکن IP می‌توانید برای IP‌های تمیز Cloudflare جستجو کنید!",
+      "ip-count": "تعداد IP‌ها",
+      "max-latency": "حداکثر تاخیر",
+      "include-range": "محدوده‌های قابل تضمین (مثلاً 1.1.1.1/24، 8.8.8.8/24)",
+      "exclude-range": "محدوده‌های مستثنی (مثلاً 1, 88.25, 41,55)",
+      "expressions": "عبارت منظم (مثلاً ^88\\.172\\.|^101\\.)",
+      "dangAlert": "قبل از شروع، VPN خود را خاموش کنید!",
+      "start": "شروع",
+      "stop": "توقف",
+      "done": "جستجوی IP به اتمام رسید!",
+      "canceled": "جستجوی IP لغو شد!",
+      "ip": "IP",
+      latency: "تاخیر",
+      advanced: "پیشرفته"
+    },
+    fr: {
+      "page-title": "leen | Scanner IP",
+      "header-text": "Internet gratuit est un droit humain | Femmes Vie Liberté",
+      "defAlert": "Avec l'outil de scanner IP, vous pouvez rechercher des IP propres à Cloudflare!",
+      "ip-count": "Nombre d'IP",
+      "max-latency": "Latence maximale",
+      "include-range": "Plages à inclure (ex. : 1.1.1.1/24,8.8.8.8/24)",
+      "exclude-range": "Plages à exclure (ex. : 1, 88.25, 41,55)",
+      "expressions": "Expression régulière (ex. : ^88\\.172\\.|^101\\.)",
+      "dangAlert": "Avant de commencer, désactivez votre VPN !",
+      "start": "Démarrer",
+      "stop": "Arrêter",
+      "done": "Recherche IP terminée !",
+      "canceled": "Recherche IP annulée !",
+      "ip": "IP",
+      latency: "Latence",
+      advanced: "Avancé"
+    },
+    es: {
+      "page-title": "leen | Escáner de IP",
+      "header-text": "El internet libre es un derecho humano | Mujeres Vida Libertad",
+      "defAlert": "Con la herramienta IP Scanner, ¡puedes buscar IPs limpias de Cloudflare!",
+      "ip-count": "Número de IPs",
+      "max-latency": "Latencia máxima",
+      "include-range": "Rangos a incluir (p. ej.: 1.1.1.1/24,8.8.8.8/24)",
+      "exclude-range": "Rangos a excluir (p. ej.: 1, 88.25, 41,55)",
+      "expressions": "Expresión regular (p. ej.: ^88\\.172\\.|^101\\.)",
+      "dangAlert": "¡Antes de comenzar, apaga tu VPN!",
+      "start": "Comenzar",
+      "stop": "Detener",
+      "done": "¡Búsqueda de IP finalizada!",
+      "canceled": "¡Búsqueda de IP cancelada!",
+      "ip": "IP",
+      latency: "Latencia",
+      advanced: "Avanzado"
+    },
+    tr: {
+      "page-title": "leen | IP Tarayıcı",
+      "header-text": "Özgür internet bir insan hakkıdır | Kadınlar Hayat Özgürlük",
+      "defAlert": "IP Tarayıcı aracı ile temiz Cloudflare IP'lerini arayabilirsiniz!",
+      "ip-count": "IP Sayısı",
+      "max-latency": "Maksimum Gecikme",
+      "include-range": "Dahil edilecek aralıklar (örn.: 1.1.1.1/24,8.8.8.8/24)",
+      "exclude-range": "Dışlanacak aralıklar (örn.: 1, 88.25, 41,55)",
+      "expressions": "Düzenli ifade (örn.: ^88\\.172\\.|^101\\.)",
+      "dangAlert": "Başlamadan önce VPN'inizi kapatın!",
+      "start": "Başlat",
+      "stop": "Durdur",
+      "done": "IP arama tamamlandı!",
+      "canceled": "IP arama iptal edildi!",
+      "ip": "IP",
+      latency: "Gecikme",
+      advanced: "Gelişmiş"
+    },
+    ru: {
+      "page-title": "leen | IP-сканер",
+      "header-text": "Свободный интернет — это право человека | Женщины Жизнь Свобода",
+      "defAlert": "С помощью инструмента IP Scanner вы можете искать чистые IP-адреса Cloudflare!",
+      "ip-count": "Количество IP",
+      "max-latency": "Максимальная задержка",
+      "include-range": "Диапазоны для включения (например: 1.1.1.1/24,8.8.8.8/24)",
+      "exclude-range": "Диапазоны для исключения (например: 1, 88.25, 41,55)",
+      "expressions": "Регулярное выражение (например: ^88\\.172\\.|^101\\.)",
+      "dangAlert": "Прежде чем начать, отключите VPN!",
+      "start": "Начать",
+      "stop": "Стоп",
+      "done": "Поиск IP завершён!",
+      "canceled": "Поиск IP отменён!",
+      "ip": "IP",
+      latency: "Задержка",
+      advanced: "Расширенные"
+    },
+    zh: {
+      "page-title": "leen | IP 扫描器",
+      "header-text": "自由互联网是人权 | 女性 生活 自由",
+      "defAlert": "使用 IP Scanner 工具，您可以搜索干净的 Cloudflare IP!",
+      "ip-count": "IP 数量",
+      "max-latency": "最大延迟",
+      "include-range": "要包含的范围（例如：1.1.1.1/24,8.8.8.8/24）",
+      "exclude-range": "要排除的范围（例如：1, 88.25, 41,55）",
+      "expressions": "正则表达式（例如：^88\\.172\\.|^101\\.)",
+      "dangAlert": "开始之前，请关闭您的 VPN！",
+      "start": "开始",
+      "stop": "停止",
+      "done": "IP 搜索完成！",
+      "canceled": "IP 搜索已取消！",
+      "ip": "IP",
+      latency: "延迟",
+      advanced: "高级"
+    }
+  };
 
-                return ips.sort(() => Math.random() - 0.5); // Shuffle
-            };
+  function changeLanguage(lang) {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'fa' ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-translate]').forEach(el => {
+      const key = el.getAttribute('data-translate');
+      if (translations[lang] && translations[lang][key]) el.textContent = translations[lang][key];
+    });
+    document.querySelectorAll('.lang-switch').forEach(sw => sw.classList.remove('active'));
+    document.querySelector(`.lang-switch[onclick*="${lang}"]`).classList.add('active');
+    localStorage.setItem('lang', lang);
+  }
 
-            // Core Scan Logic
-            const startScan = async () => {
-                setIsScanning(true);
-                setResults([]);
-                setCurrentStatus({ msg: t.scanning, ip: "", active: true });
+  function toggleAdvanced() {
+    const body = document.getElementById('advanced-body');
+    const icon = document.getElementById('adv-icon');
+    body.classList.toggle('collapsed');
+    icon.textContent = body.classList.contains('collapsed') ? '▶' : '▼';
+  }
 
-                const ipList = processIPs();
-                const foundIPs = [];
-                let count = 0;
-                
-                const controller = new AbortController();
-                const timeout = maxLatency <= 500 ? 2000 : 4000;
-
-                for (const ip of ipList) {
-                    if (!isScanning) break;
-                    if (foundIPs.length >= maxIP) break;
-
-                    count++;
-                    setCurrentStatus(prev => ({ ...prev, ip: ip, msg: `${t.status}: ${count}` }));
-
-                    let successCount = 0;
-                    const startTime = performance.now();
-
-                    // Test multiple times (simulated)
-                    for (const ch of ['', '|', '/']) {
-                        try {
-                            const fetchPromise = fetch(`https://${ip}:2096/__down`, {
-                                signal: controller.signal,
-                                cache: 'no-cache'
-                            });
-                            
-                            // Race condition with timeout
-                            const timeoutPromise = new Promise((_, reject) => 
-                                setTimeout(() => reject(new Error("Timeout")), timeout)
-                            );
-
-                            await Promise.race([fetchPromise, timeoutPromise]);
-                            successCount++;
-                        } catch (e) {
-                            // Ignore connection errors
-                        }
-                    }
-
-                    const latency = Math.floor(performance.now() - startTime) / 3;
-
-                    if (successCount > 0 && latency <= maxLatency) {
-                        foundIPs.push({ ip: ip, latency: latency });
-                        // Update results immediately (sorted)
-                        const sorted = [...foundIPs].sort((a, b) => a.latency - b.latency);
-                        setResults(sorted);
-                    }
-                }
-
-                setIsScanning(false);
-                setCurrentStatus({ 
-                    msg: isScanning ? t.canceled : t.finished, 
-                    ip: "", 
-                    active: false 
-                });
-            };
-
-            const cancelScan = () => {
-                setIsScanning(false);
-            };
-
-            // Render Helpers
-            const handleDownloadCSV = () => {
-                const csvContent = "data:text/csv;charset=utf-8," + results.map(e => `${e.ip},${e.latency}`).join("\n");
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "clean_ips.csv");
-                document.body.appendChild(link);
-                link.click();
-            };
-
-            const handleCopyAll = () => {
-                const text = results.map(e => e.ip).join('\n');
-                navigator.clipboard.writeText(text);
-            };
-
-            return (
-                <div className="flex flex-col items-center w-full min-h-screen p-4 md:p-8">
-                    
-                    {/* Header */}
-                    <header className="w-full max-w-5xl mb-10 animate-fade-in">
-                        <div className="flex justify-between items-center glass-panel rounded-2xl p-6 border-l-4 border-brand-gold">
-                            <div>
-                                <h1 className="text-3xl font-bold text-white tracking-wide">
-                                    <span className="text-brand-gold">IP</span> Scanner
-                                </h1>
-                                <p className="text-gray-400 text-sm mt-1">Modern Cloudflare IP Scanner</p>
-                            </div>
-                            
-                            <div className="flex items-center gap-4">
-                                <button 
-                                    onClick={() => setLang(lang === 'en' ? 'fa' : 'en')}
-                                    className="px-4 py-2 rounded-lg bg-[#252525] text-brand-gold border border-gray-700 hover:border-brand-gold transition-all"
-                                >
-                                    {lang === 'en' ? 'فا' : 'EN'}
-                                </button>
-                                <div className="h-10 w-10 rounded-full bg-gradient-to-tr from-brand-gold to-yellow-600 flex items-center justify-center shadow-lg">
-                                    <i className="fa-solid fa-shield-halved text-white"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </header>
-
-                    {/* Main Content Grid */}
-                    <main className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        
-                        {/* Left Column: Settings */}
-                        <div className="lg:col-span-1 space-y-6 animate-fade-in" style={{animationDelay: '0.1s'}}>
-                            
-                            {/* Basic Settings */}
-                            <div className="glass-panel rounded-2xl p-6">
-                                <h2 className="text-xl font-semibold text-white mb-6 border-b border-gray-700 pb-2">
-                                    <i className="fa-solid fa-sliders text-brand-gold mr-2"></i>{t.advanced}
-                                </h2>
-                                
-                                <div className="space-y-4">
-                                    <div>
-                                        <label className="block text-xs uppercase text-gray-500 font-bold mb-2">{t.maxIP}</label>
-                                        <input 
-                                            type="number" 
-                                            value={maxIP} 
-                                            onChange={(e) => setMaxIP(e.target.value)}
-                                            disabled={isScanning}
-                                            className="w-full bg-[#1E1E1E] border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all disabled:opacity-50"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs uppercase text-gray-500 font-bold mb-2">{t.maxLatency}</label>
-                                        <input 
-                                            type="number" 
-                                            value={maxLatency} 
-                                            onChange={(e) => setMaxLatency(e.target.value)}
-                                            disabled={isScanning}
-                                            className="w-full bg-[#1E1E1E] border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all disabled:opacity-50"
-                                        />
-                                    </div>
-
-                                    <div>
-                                        <label className="block text-xs uppercase text-gray-500 font-bold mb-2">{t.regex}</label>
-                                        <input 
-                                            type="text" 
-                                            placeholder="^172\."
-                                            value={regex} 
-                                            onChange={(e) => setRegex(e.target.value)}
-                                            disabled={isScanning}
-                                            className="w-full bg-[#1E1E1E] border border-gray-700 text-white rounded-lg px-4 py-3 focus:outline-none focus:border-brand-gold focus:ring-1 focus:ring-brand-gold transition-all disabled:opacity-50"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Advanced Settings (Collapsible) */}
-                            <div className="glass-panel rounded-2xl overflow-hidden transition-all duration-300 ease-in-out border border-gray-800">
-                                <button 
-                                    onClick={() => setIsAdvancedOpen(!isAdvancedOpen)}
-                                    className="w-full p-4 flex items-center justify-between text-gray-300 hover:text-white transition-colors bg-[#252525]/50"
-                                >
-                                    <span className="text-sm font-medium uppercase tracking-wider text-brand-gold">
-                                        {t.advanced}
-                                    </span>
-                                    <i className={`fa-solid fa-chevron-down transition-transform duration-300 ${isAdvancedOpen ? 'rotate-180' : ''}`}></i>
-                                </button>
-                                
-                                <div className={`transition-all duration-300 ease-in-out ${isAdvancedOpen ? 'max-h-96 opacity-100 p-4 pt-0' : 'max-h-0 opacity-50'}`}>
-                                    <div className="space-y-4">
-                                        <div>
-                                            <label className="block text-xs text-gray-400 mb-1">{t.include}</label>
-                                            <input 
-                                                type="text" 
-                                                placeholder="1.1.1.1/24"
-                                                value={include} 
-                                                onChange={(e) => setInclude(e.target.value)}
-                                                disabled={isScanning}
-                                                className="w-full bg-[#1E1E1E] border border-gray-700 text-gray-300 text-sm rounded-lg px-3 py-2 focus:border-brand-gold outline-none disabled:opacity-50"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-xs text-gray-400 mb-1">{t.exclude}</label>
-                                            <input 
-                                                type="text" 
-                                                placeholder="104.16"
-                                                value={exclude} 
-                                                onChange={(e) => setExclude(e.target.value)}
-                                                disabled={isScanning}
-                                                className="w-full bg-[#1E1E1E] border border-gray-700 text-gray-300 text-sm rounded-lg px-3 py-2 focus:border-brand-gold outline-none disabled:opacity-50"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Action Button */}
-                            <button 
-                                onClick={isScanning ? cancelScan : startScan}
-                                disabled={ipRanges.length === 0}
-                                className={`w-full py-4 rounded-2xl font-bold text-lg shadow-xl transition-all transform hover:scale-[1.02] active:scale-95 flex items-center justify-center gap-2
-                                    ${isScanning 
-                                        ? 'bg-red-600 hover:bg-red-700 shadow-red-900/20' 
-                                        : 'bg-gold-gradient hover:brightness-110 shadow-brand-gold/20 text-black'}
-                                `}
-                            >
-                                {isScanning ? (
-                                    <>
-                                        <i className="fa-solid fa-stop animate-pulse"></i> {t.stop}
-                                    </>
-                                ) : (
-                                    <>
-                                        <i className="fa-solid fa-play"></i> {t.start}
-                                    </>
-                                )}
-                            </button>
-
-                        </div>
-
-                        {/* Right Column: Results */}
-                        <div className="lg:col-span-2 space-y-6 animate-fade-in" style={{animationDelay: '0.2s'}}>
-                            
-                            {/* Status Card */}
-                            <div className="glass-panel rounded-2xl p-6 relative overflow-hidden">
-                                <div className="absolute top-0 left-0 w-1 h-full bg-brand-gold opacity-50"></div>
-                                <div className="flex flex-col items-center justify-center py-4">
-                                    <div className={`text-sm font-medium mb-2 ${currentStatus.active ? 'text-brand-gold animate-pulse' : 'text-gray-400'}`}>
-                                        {currentStatus.msg}
-                                    </div>
-                                    {currentStatus.ip && (
-                                        <div className="text-2xl font-mono text-white tracking-wider bg-[#121212] px-4 py-2 rounded-lg border border-gray-800 shadow-inner">
-                                            {currentStatus.ip}
-                                        </div>
-                                    )}
-                                    {!currentStatus.ip && !isScanning && (
-                                        <div className="text-gray-600 text-sm">Waiting for scan...</div>
-                                    )}
-                                </div>
-                            </div>
-
-                            {/* Results Table */}
-                            <div className="glass-panel rounded-2xl overflow-hidden min-h-[400px]">
-                                <div className="p-4 border-b border-gray-700 bg-[#252525]/30 flex justify-between items-center">
-                                    <h3 className="text-white font-semibold flex items-center gap-2">
-                                        <i className="fa-solid fa-list-ol text-brand-gold"></i>
-                                        {results.length} {t.ip} Found
-                                    </h3>
-                                    {results.length > 0 && (
-                                        <div className="flex gap-2">
-                                            <button onClick={handleCopyAll} className="text-xs bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded transition-colors">
-                                                Copy All
-                                            </button>
-                                            <button onClick={handleDownloadCSV} className="text-xs bg-brand-gold hover:bg-[#D4B07E] text-black px-3 py-1 rounded font-bold transition-colors">
-                                                Export CSV
-                                            </button>
-                                        </div>
-                                    )}
-                                </div>
-
-                                <div className="overflow-x-auto">
-                                    <table className="w-full text-left">
-                                        <thead className="bg-[#1E1E1E] text-gray-400 text-xs uppercase">
-                                            <tr>
-                                                <th className="px-6 py-4 font-medium">#</th>
-                                                <th className="px-6 py-4 font-medium">{t.ip}</th>
-                                                <th className="px-6 py-4 font-medium">{t.latency}</th>
-                                                <th className="px-6 py-4 font-medium text-right">{t.action}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="divide-y divide-gray-800">
-                                            {results.length === 0 ? (
-                                                <tr>
-                                                    <td colSpan="4" className="px-6 py-12 text-center text-gray-500">
-                                                        <i className="fa-solid fa-circle-info text-4xl mb-4 opacity-20"></i>
-                                                        <p>{t.noResults}</p>
-                                                    </td>
-                                                </tr>
-                                            ) : (
-                                                results.map((item, index) => (
-                                                    <tr key={index} className="hover:bg-[#2a2a2a]/50 transition-colors group">
-                                                        <td className="px-6 py-4 text-gray-500 font-mono text-sm">
-                                                            {index + 1}
-                                                        </td>
-                                                        <td className="px-6 py-4 text-white font-mono">
-                                                            {item.ip}
-                                                        </td>
-                                                        <td className="px-6 py-4">
-                                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
-                                                                ${item.latency < 200 ? 'bg-green-900/50 text-green-400 border border-green-800' : 
-                                                                  item.latency < 400 ? 'bg-yellow-900/50 text-yellow-400 border border-yellow-800' : 
-                                                                  'bg-red-900/50 text-red-400 border border-red-800'}`}>
-                                                                {item.latency} ms
-                                                            </span>
-                                                        </td>
-                                                        <td className="px-6 py-4 text-right">
-                                                            <button 
-                                                                onClick={() => navigator.clipboard.writeText(item.ip)}
-                                                                className="text-gray-500 hover:text-brand-gold transition-colors p-2 rounded hover:bg-[#252525]"
-                                                                title="Copy IP"
-                                                            >
-                                                                <i className="fa-regular fa-copy"></i>
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                ))
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-
-                        </div>
-                    </main>
-
-                    {/* Footer */}
-                    <footer className="w-full max-w-5xl mt-12 py-8 border-t border-gray-800 text-center text-gray-600 text-sm">
-                        <p>&copy; {new Date().getFullYear()} DrunkLeen. All rights reserved.</p>
-                        <p className="mt-2 text-xs text-gray-700">Designed with React & Tailwind</p>
-                    </footer>
-
-                </div>
-            );
-        }
-
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
-    </script>
+  // init
+  (() => {
+    const saved = localStorage.getItem('lang') || 'fa';
+    changeLanguage(saved);
+  })();
+</script>
 </body>
 </html>
