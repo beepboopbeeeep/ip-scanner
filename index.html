@@ -71,11 +71,13 @@
         /* Controls & Inputs */
         .form-control, .form-select {
             background-color: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255,255, 255, 0.1);
             color: var(--text-main);
             border-radius: 12px;
             padding: 12px 15px;
             transition: all 0.3s ease;
+            /* Force Latin font to prevent Persian numbers in LTR inputs */
+            font-family: 'Inter', sans-serif; 
         }
 
         /* Force LTR for inputs to handle IPs and numbers correctly in RTL modes */
@@ -83,7 +85,6 @@
             direction: ltr !important;
             text-align: left;
             unicode-bidi: embed;
-            font-family: 'Inter', 'Vazirmatn', sans-serif; /* Prefer Inter for numbers */
         }
 
         [dir="rtl"] .ltr-text {
@@ -246,7 +247,7 @@
     </style>
 </head>
 
-<body data-bs-theme="dark">
+<body>
 
     <!-- Navigation -->
     <nav class="navbar fixed-top navbar-expand-lg">
@@ -262,14 +263,6 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav align-items-center gap-3">
                     
-                    <!-- Theme Toggle -->
-                    <li class="nav-item">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" onclick="toggleTheme()" checked>
-                            <label class="form-check-label text-gold ms-2" for="flexSwitchCheckChecked" data-translate="darkmode"></label>
-                        </div>
-                    </li>
-
                     <!-- Language Dropdown -->
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btn btn-outline-gold px-3" href="#" role="button" data-bs-toggle="dropdown">
@@ -280,6 +273,7 @@
                             <li><a class="dropdown-item" onclick="changeLanguage('de')">Deutsch 🇩🇪</a></li>
                             <li><a class="dropdown-item" onclick="changeLanguage('fa')">فارسی 🇮🇷</a></li>
                             <li><a class="dropdown-item" onclick="changeLanguage('fr')">Française 🇫🇷</a></li>
+                            <li><a class="dropdown-item" onclick="changeLanguage('ru')">Русский 🇷🇺</a></li>
                             <li><a class="dropdown-item" onclick="changeLanguage('tr')">Türkçe 🇹🇷</a></li>
                             <li><a class="dropdown-item" onclick="changeLanguage('es')">Español 🇪🇸</a></li>
                             <li><a class="dropdown-item" onclick="changeLanguage('zh')">中文 🇨🇳</a></li>
@@ -614,6 +608,12 @@
             for (const ip of ipList) {
                 if (immediateStop) break;
 
+                // Check if we have reached the target number of IPs at the start of the loop
+                // This prevents unnecessary scanning after finding enough good IPs.
+                if (numberOfWorkingIPs >= maxIP) {
+                    break;
+                }
+
                 testNo++;
                 var testResult = 0;
                 const url = `https://${ip}:2096/__down`;
@@ -656,10 +656,9 @@
                 const latency = Math.floor((performance.now() - startTime) / 5);
                 document.getElementById('ip-latency').innerText = `${latency}ms`;
                 
-                // Fake progress
-                if(testNo % 5 === 0) {
-                    progressBar.style.width = Math.min((numberOfWorkingIPs / maxIP) * 100, 100) + '%';
-                }
+                // Update progress bar based on how many IPs have been tested
+                const progressPercentage = Math.min((testNo / ipList.length) * 100, 100);
+                progressBar.style.width = progressPercentage + '%';
 
                 if (testResult >= 3 && latency <= maxLatency) {
                     numberOfWorkingIPs++;
@@ -681,11 +680,14 @@
                         </tr>`).join('');
 
                     resultTableBody.innerHTML = tableRows;
-
-                    if (numberOfWorkingIPs >= maxIP) {
-                        break;
-                    }
                 }
+            }
+
+            // If loop finished naturally or broke due to immediateStop, ensure UI is reset.
+            // If loop broke because target was reached, the progress bar might be < 100%.
+            // We set it to 100% to indicate "Done" to the user.
+            if (!immediateStop && numberOfWorkingIPs >= maxIP) {
+                 progressBar.style.width = '100%';
             }
 
             resetUIState();
@@ -702,7 +704,6 @@
                 
                 statusAlert.className = "alert alert-success d-flex align-items-center glass-panel mt-3 d-block";
                 statusAlert.innerHTML = `<i class="bi bi-check-circle-fill me-2"></i> ${translations[language]['done']}`;
-                progressBar.style.width = '100%';
             }
         }
 
@@ -805,14 +806,206 @@
         // --- Localization & Theme ---
 
         const translations = {
-            'de': { 'direction': 'ltr', "darkmode": "Dunkelmodus", 'clean-ip-scanner': 'Clean IP Scanner', 'language': 'Sprache', "page-title": "leen | IP Scanner", "defAlert": "Mit dem IP-Scanner-Tool können Sie nach sauberen Cloudflare-IPs suchen!", "header-text": "Freies Internet ist ein Menschenrecht | Frauen Leben Freiheit", "description": "Sichere und saubere IP für Cloudflare, um auf das kostenlose Internet zuzugreifen", "tools": "Werkzeuge", "ip-count": "Anzahl der IPs", "max-latency": "Maximale Latenz", "include-range": "Bereiche zum Einbeziehen", "exclude-range": "Bereiche zum Ausschließen", "expressions": "Regulärer Ausdruck", "dangAlert": "Bevor Sie beginnen, schalten Sie Ihr VPN aus!", "start": "Starten", "stop": "Stoppen", "done": "IP-Suche abgeschlossen!", "canceled": "IP-Suche abgebrochen!", "about": "Über", "ip": "IP", 'latency': 'Latenz', "footer-text": "© bei DrunkLeen" },
-            'en': { 'direction': 'ltr', "darkmode": "Dark Mode", 'clean-ip-scanner': 'Clean IP Scanner', 'language': 'Language', "page-title": "leen | IP Scanner", "defAlert": "With IP Scanner tool, you can search for clean Cloudflare IPs!", "header-text": "Free internet is a human right | Women Life Freedom", "description": "Safe and clean IP for Cloudflare to access to free internet", "tools": "Tools", "ip-count": "Number of IPs", "max-latency": "Maximum Latency", "include-range": "Ranges to include", "exclude-range": "Ranges to exclude", "expressions": "Regular expression", "dangAlert": "Before you start, turn off your VPN!", "start": "Start", "stop": "Stop", "done": "Searching IP finished!", "canceled": "Searching IP canceled!", "about": "About", "ip": "IP", 'latency': 'Latency', "footer-text": "© By DrunkLeen" },
-            'fa': { 'direction': 'rtl', "darkmode": "حالت تاریک", 'clean-ip-scanner': 'اسکنر IP تمیز', 'language': 'زبان', "page-title": "leen | اسکن IP", "defAlert": "با ابزار اسکن IP می‌توانید برای IP‌های تمیز Cloudflare جستجو کنید!", "header-text": "اینترنت آزاد حق انسانیست | زن زندگی آزادی", "description": "IP امن و تمیز برای دسترسی به اینترنت آزاد از طریق Cloudflare", "tools": "ابزارها", "ip-count": "تعداد IP‌ها", "max-latency": "حداکثر تاخیر", "include-range": "محدوده‌های قابل تضمین", "exclude-range": "محدوده‌های مستثنی", "expressions": "عبارت منظم", "dangAlert": "قبل از شروع، VPN خود را خاموش کنید!", "start": "شروع", "stop": "توقف", "done": "جستجوی IP به اتمام رسید!", "canceled": "جستجوی IP لغو شد!", "about": "درباره", "ip": "IP", 'latency': 'تاخیر', "footer-text": "© توسط DrunkLeen" },
-            'fr': { 'direction': 'ltr', "darkmode": "Mode sombre", 'clean-ip-scanner': 'Scanner IP propre', 'language': 'Langue', "page-title": "leen | Scanner IP", "defAlert": "Avec l'outil de scanner IP, vous pouvez rechercher des IP propres à Cloudflare!", "header-text": "Internet gratuit est un droit humain | Femmes Vie Liberté", "description": "IP sûre et propre pour accéder à Internet gratuitement via Cloudflare", "tools": "Outils", "ip-count": "Nombre d'IP", "max-latency": "Latence maximale", "include-range": "Plages à inclure", "exclude-range": "Plages à exclure", "expressions": "Expression régulière", "dangAlert": "Avant de commencer, désactivez votre VPN !", "start": "Démarrer", "stop": "Arrêter", "done": "Recherche IP terminée !", "canceled": "Recherche IP annulée !", "about": "À propos de", "ip": "IP", 'latency': 'Latence', "footer-text": "© Par DrunkLeen" },
-            'ru': { 'direction': 'ltr', "darkmode": "Тёмный режим", 'clean-ip-scanner': 'Чистый IP-сканер', 'language': 'Язык', "page-title": "leen | IP Scanner", "defAlert": "С помощью инструмента IP Scanner вы можете искать чистые IP-адреса Cloudflare!", "header-text": "Свободный интернет - это право человека | Женщины Жизнь Свобода", "description": "Безопасный и чистый IP для доступа к свободному интернету через Cloudflare", "tools": "Инструменты", "ip-count": "Количество IP", "max-latency": "Максимальная задержка", "include-range": "Диапазоны для включения", "exclude-range": "Диапазоны для исключения", "expressions": "Регулярное выражение", "dangAlert": "Прежде чем начать, отключите VPN!", "start": "Начать", "stop": "Стоп", "done": "Поиск IP завершён!", "canceled": "Поиск IP отменён!", "about": "О нас", "ip": "IP", 'latency': 'Задержка', "footer-text": "© От DrunkLeen" },
-            'es': { 'direction': 'ltr', "darkmode": "Modo oscuro", 'clean-ip-scanner': 'Escáner de IP limpio', 'language': 'Idioma', "page-title": "leen | Escáner de IP", "defAlert": "Con la herramienta IP Scanner, ¡puedes buscar IPs limpias de Cloudflare!", "header-text": "El internet libre es un derecho humano | Mujeres Vida Libertad", "description": "IP segura y limpia para que Cloudflare acceda al internet libre", "tools": "Herramientas", "ip-count": "Número de IPs", "max-latency": "Latencia máxima", "include-range": "Rangos a incluir", "exclude-range": "Rangos a excluir", "expressions": "Expresión regular", "dangAlert": "¡Antes de comenzar, apaga tu VPN!", "start": "Comenzar", "stop": "Detener", "done": "¡Búsqueda de IP finalizada!", "canceled": "¡Búsqueda de IP cancelada!", "about": "Acerca de", "ip": "IP", 'latency': 'Latencia', "footer-text": "© Por DrunkLeen" },
-            'tr': { 'direction': 'ltr', "darkmode": "Karanlık Mod", 'clean-ip-scanner': 'Temiz IP Tarayıcı', 'language': 'Dil', "page-title": "leen | IP Tarayıcı", "defAlert": "IP Tarayıcı aracı ile temiz Cloudflare IP'lerini arayabilirsiniz!", "header-text": "Özgür internet bir insan hakkıdır | Kadınlar Hayat Özgürlük", "description": "Ücretsiz internete erişim için güvenli ve temiz IP", "tools": "Araçlar", "ip-count": "IP Sayısı", "max-latency": "Maksimum Gecikme", "include-range": "Dahil edilecek aralıklar", "exclude-range": "Dışlanacak aralıklar", "expressions": "Düzenli ifade", "dangAlert": "Başlamadan önce VPN'inizi kapatın!", "start": "Başlat", "stop": "Durdur", "done": "IP arama tamamlandı!", "canceled": "IP arama iptal edildi!", "about": "Hakkında", "ip": "IP", 'latency': 'Gecikme', "footer-text": "© DrunkLeen tarafından" },
-            'zh': { 'direction': 'ltr', "darkmode": "深色模式", 'clean-ip-scanner': '清洁IP扫描器', 'language': '语言', "page-title": "leen | IP 扫描器", "defAlert": "使用 IP Scanner 工具，您可以搜索干净的 Cloudflare IP!", "header-text": "自由互联网是人权 | 女性 生活 自由", "description": "Cloudflare 访问自由互联网所需的安全而清洁的 IP", "tools": "工具", "ip-count": "IP 数量", "max-latency": "最大延迟", "include-range": "要包含的范围", "exclude-range": "要排除的范围", "expressions": "正则表达式", "dangAlert": "开始之前，请关闭您的 VPN！", "start": "开始", "stop": "停止", "done": "IP 搜索完成！", "canceled": "IP 搜索已取消！", "about": "关于", "ip": "IP", 'latency': '延迟', "footer-text": "© 由DrunkLeen" }
+            'de': { 
+                'direction': 'ltr', 
+                "darkmode": "Dunkelmodus", 
+                'clean-ip-scanner': 'Clean IP Scanner', 
+                'language': 'Sprache', 
+                "page-title": "leen | IP Scanner", 
+                "defAlert": "Mit dem IP-Scanner-Tool können Sie nach sauberen Cloudflare-IPs suchen!", 
+                "header-text": "Freies Internet ist ein Menschenrecht | Women Life Freedom", 
+                "description": "Sichere und saubere IP für Cloudflare, um auf das kostenlose Internet zuzugreifen", 
+                "tools": "Werkzeuge", 
+                "ip-count": "Anzahl der IPs", 
+                "max-latency": "Maximale Latenz", 
+                "include-range": "Bereiche zum Einbeziehen", 
+                "exclude-range": "Bereiche zum Ausschließen", 
+                "expressions": "Regulärer Ausdruck", 
+                "dangAlert": "Bevor Sie beginnen, schalten Sie Ihr VPN aus!", 
+                "start": "Starten", 
+                "stop": "Stoppen", 
+                "done": "IP-Suche abgeschlossen!", 
+                "canceled": "IP-Suche abgebrochen!", 
+                "about": "Über", 
+                "ip": "IP", 
+                'latency': 'Latenz', 
+                "footer-text": "© Von DrunkLeen" 
+            },
+            'en': { 
+                'direction': 'ltr', 
+                "darkmode": "Dark Mode", 
+                'clean-ip-scanner': 'Clean IP Scanner', 
+                'language': 'Language', 
+                "page-title": "leen | IP Scanner", 
+                "defAlert": "With IP Scanner tool, you can search for clean Cloudflare IPs!", 
+                "header-text": "Free internet is a human right | Women Life Freedom", 
+                "description": "Safe and clean IP for Cloudflare to access to free internet", 
+                "tools": "Tools", 
+                "ip-count": "Number of IPs", 
+                "max-latency": "Maximum Latency", 
+                "include-range": "Ranges to include", 
+                "exclude-range": "Ranges to exclude", 
+                "expressions": "Regular expression", 
+                "dangAlert": "Before you start, turn off your VPN!", 
+                "start": "Start", 
+                "stop": "Stop", 
+                "done": "Searching IP finished!", 
+                "canceled": "Searching IP canceled!", 
+                "about": "About", 
+                "ip": "IP", 
+                'latency': 'Latency', 
+                "footer-text": "© By DrunkLeen" 
+            },
+            'fa': { 
+                'direction': 'rtl', 
+                "darkmode": "حالت تاریک", 
+                'clean-ip-scanner': 'اسکنر IP تمیز', 
+                'language': 'زبان', 
+                "page-title": "leen | اسکن IP", 
+                "defAlert": "با ابزار اسکن IP می‌توانید برای IP‌های تمیز Cloudflare جستجو کنید!", 
+                "header-text": "اینترنت رایگان یک حق انسانی است | Women Life Freedom", 
+                "description": "IP امن و تمیز برای دسترسی به اینترنت آزاد از طریق Cloudflare", 
+                "tools": "ابزارها", 
+                "ip-count": "تعداد IP‌ها", 
+                "max-latency": "حداکثر تاخیر", 
+                "include-range": "محدوده‌های قابل تضمین", 
+                "exclude-range": "محدوده‌های مستثنی", 
+                "expressions": "عبارت منظم", 
+                "dangAlert": "قبل از شروع، VPN خود را خاموش کنید!", 
+                "start": "شروع", 
+                "stop": "توقف", 
+                "done": "جستجوی IP به اتمام رسید!", 
+                "canceled": "جستجوی IP لغو شد!", 
+                "about": "درباره", 
+                "ip": "IP", 
+                'latency': 'تاخیر', 
+                "footer-text": "© توسط DrunkLeen" 
+            },
+            'fr': { 
+                'direction': 'ltr', 
+                "darkmode": "Mode sombre", 
+                'clean-ip-scanner': 'Scanner IP propre', 
+                'language': 'Langue', 
+                "page-title": "leen | Scanner IP", 
+                "defAlert": "Avec l'outil de scanner IP, vous pouvez rechercher des IP propres à Cloudflare!", 
+                "header-text": "L'internet gratuit est un droit humain | Women Life Freedom", 
+                "description": "IP sûre et propre pour accéder à Internet gratuitement via Cloudflare", 
+                "tools": "Outils", 
+                "ip-count": "Nombre d'IP", 
+                "max-latency": "Latence maximale", 
+                "include-range": "Plages à inclure", 
+                "exclude-range": "Plages à exclure", 
+                "expressions": "Expression régulière", 
+                "dangAlert": "Avant de commencer, désactivez votre VPN !", 
+                "start": "Démarrer", 
+                "stop": "Arrêter", 
+                "done": "Recherche IP terminée !", 
+                "canceled": "Recherche IP annulée !", 
+                "about": "À propos de", 
+                "ip": "IP", 
+                'latency': 'Latence', 
+                "footer-text": "© Par DrunkLeen" 
+            },
+            'ru': { 
+                'direction': 'ltr', 
+                "darkmode": "Тёмный режим", 
+                'clean-ip-scanner': 'Чистый IP-сканер', 
+                'language': 'Язык', 
+                "page-title": "leen | IP Scanner", 
+                "defAlert": "С помощью инструмента IP Scanner вы можете искать чистые IP-адреса Cloudflare!", 
+                "header-text": "Свободный интернет - это право человека | Women Life Freedom", 
+                "description": "Безопасный и чистый IP для доступа к свободному интернету через Cloudflare", 
+                "tools": "Инструменты", 
+                "ip-count": "Количество IP", 
+                "max-latency": "Максимальная задержка", 
+                "include-range": "Диапазоны для включения", 
+                "exclude-range": "Диапазоны для исключения", 
+                "expressions": "Регулярное выражение", 
+                "dangAlert": "Прежде чем начать, отключите VPN!", 
+                "start": "Начать", 
+                "stop": "Стоп", 
+                "done": "Поиск IP завершён!", 
+                "canceled": "Поиск IP отменён!", 
+                "about": "О нас", 
+                "ip": "IP", 
+                'latency': 'Задержка', 
+                "footer-text": "© От DrunkLeen" 
+            },
+            'es': { 
+                'direction': 'ltr', 
+                "darkmode": "Modo oscuro", 
+                'clean-ip-scanner': 'Escáner de IP limpio', 
+                'language': 'Idioma', 
+                "page-title": "leen | Escáner de IP", 
+                "defAlert": "Con la herramienta IP Scanner, ¡puedes buscar IPs limpias de Cloudflare!", 
+                "header-text": "El internet gratuito es un derecho humano | Women Life Freedom", 
+                "description": "IP segura y limpia para que Cloudflare acceda al internet libre", 
+                "tools": "Herramientas", 
+                "ip-count": "Número de IPs", 
+                "max-latency": "Latencia máxima", 
+                "include-range": "Rangos a incluir", 
+                "exclude-range": "Rangos a excluir", 
+                "expressions": "Expresión regular", 
+                "dangAlert": "¡Antes de comenzar, apaga tu VPN!", 
+                "start": "Comenzar", 
+                "stop": "Detener", 
+                "done": "¡Búsqueda de IP finalizada!", 
+                "canceled": "¡Búsqueda de IP cancelada!", 
+                "about": "Acerca de", 
+                "ip": "IP", 
+                'latency': 'Latencia', 
+                "footer-text": "© Por DrunkLeen" 
+            },
+            'tr': { 
+                'direction': 'ltr', 
+                "darkmode": "Karanlık Mod", 
+                'clean-ip-scanner': 'Temiz IP Tarayıcı', 
+                'language': 'Dil', 
+                "page-title": "leen | IP Tarayıcı", 
+                "defAlert": "IP Tarayıcı aracı ile temiz Cloudflare IP'lerini arayabilirsiniz!", 
+                "header-text": "Ücretsiz internet bir insan hakkıdır | Women Life Freedom", 
+                "description": "Ücretsiz internete erişim için güvenli ve temiz IP", 
+                "tools": "Araçlar", 
+                "ip-count": "IP Sayısı", 
+                "max-latency": "Maksimum Gecikme", 
+                "include-range": "Dahil edilecek aralıklar", 
+                "exclude-range": "Dışlanacak aralıklar", 
+                "expressions": "Düzenli ifade", 
+                "dangAlert": "Başlamadan önce VPN'inizi kapatın!", 
+                "start": "Başlat", 
+                "stop": "Durdur", 
+                "done": "IP arama tamamlandı!", 
+                "canceled": "IP arama iptal edildi!", 
+                "about": "Hakkında", 
+                "ip": "IP", 
+                'latency': 'Gecikme', 
+                "footer-text": "© DrunkLeen tarafından" 
+            },
+            'zh': { 
+                'direction': 'ltr', 
+                "darkmode": "深色模式", 
+                'clean-ip-scanner': '清洁IP扫描器', 
+                'language': '语言', 
+                "page-title": "leen | IP 扫描器", 
+                "defAlert": "使用 IP Scanner 工具，您可以搜索干净的 Cloudflare IP!", 
+                "header-text": "免费互联网是一项基本人权 | Women Life Freedom", 
+                "description": "Cloudflare 访问自由互联网所需的安全而清洁的 IP", 
+                "tools": "工具", 
+                "ip-count": "IP 数量", 
+                "max-latency": "最大延迟", 
+                "include-range": "要包含的范围", 
+                "exclude-range": "要排除的范围", 
+                "expressions": "正则表达式", 
+                "dangAlert": "开始之前，请关闭您的 VPN！", 
+                "start": "开始", 
+                "stop": "停止", 
+                "done": "IP 搜索完成！", 
+                "canceled": "IP 搜索已取消！", 
+                "about": "关于", 
+                "ip": "IP", 
+                'latency': '延迟', 
+                "footer-text": "© 由 DrunkLeen" 
+            }
         };
 
         function changeLanguage(lang = 'en') {
@@ -843,26 +1036,6 @@
                 // Force LTR for non-Persian languages to prevent Persian numbers
                 htmlTag.setAttribute('dir', 'ltr');
                 bodyTag.setAttribute('dir', 'ltr');
-            }
-        }
-
-        function toggleTheme() {
-            const bodyElement = document.body;
-            const currentTheme = bodyElement.getAttribute('data-bs-theme');
-            const checkbox = document.getElementById("flexSwitchCheckChecked");
-            
-            if (currentTheme === 'dark') {
-                bodyElement.setAttribute('data-bs-theme', 'light');
-                bodyElement.style.backgroundColor = '#f0f0f0';
-                bodyElement.style.color = '#333';
-                localStorage.setItem('darkMode', 'light');
-                checkbox.checked = false;
-            } else {
-                bodyElement.setAttribute('data-bs-theme', 'dark');
-                bodyElement.style.backgroundColor = 'var(--bg-dark)';
-                bodyElement.style.color = '#fff';
-                localStorage.setItem('darkMode', 'dark');
-                checkbox.checked = true;
             }
         }
 
