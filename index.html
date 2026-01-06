@@ -1,1143 +1,259 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fa" dir="rtl">
 
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Clean IP Scanner</title>
-  <meta name="keywords" content="cloudflare, cf, fragment, xray, v2ray, worker" />
-  <meta name="robots" content="index,follow,noodp" />
-  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="description" content="Fast and clean IP scanner with advanced filtering options" />
 
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Fonts -->
+  <link href="./assets/css/vazir.css" rel="stylesheet" />
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --primary: #C7A46C;
-      --primary-light: #D4BC85;
-      --primary-dark: #A68A4E;
-      --dark: #1E1E1E;
-      --dark-light: #2A2A2A;
-      --dark-lighter: #3A3A3A;
-      --text-primary: #FFFFFF;
-      --text-secondary: #B8B8B8;
-      --text-muted: #808080;
-      --danger: #E74C3C;
-      --success: #2ECC71;
-      --gradient-primary: linear-gradient(135deg, #C7A46C 0%, #A68A4E 100%);
-      --gradient-dark: linear-gradient(180deg, #1E1E1E 0%, #0D0D0D 100%);
-      --gradient-card: linear-gradient(145deg, #2A2A2A 0%, #1E1E1E 100%);
-      --gradient-input: linear-gradient(180deg, #3A3A3A 0%, #2A2A2A 100%);
-      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
-      --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-      --border-radius: 12px;
-      --border-radius-sm: 8px;
-      --transition: all 0.3s ease;
-    }
-
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--gradient-dark);
-      color: var(--text-primary);
+      background: linear-gradient(135deg, #1E1E1EFF, #2a2a2a, #1E1E1EFF);
+      color: #fff;
+      font-family: Vazir, sans-serif;
       min-height: 100vh;
-      line-height: 1.6;
     }
 
     /* Navbar */
     .navbar {
-      background: rgba(30, 30, 30, 0.95);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--dark-lighter);
-      padding: 1rem 0;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
+      background: rgba(30, 30, 30, 0.7);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(199, 164, 108, 0.3);
     }
 
-    .navbar .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+    .navbar h1 {
+      font-size: 1.6rem;
+      font-weight: bold;
+      color: #C7A46C;
+      margin-left: 10px;
     }
 
-    .navbar-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--primary);
-      text-decoration: none;
-      background: var(--gradient-primary);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .navbar-brand img {
-      width: 40px;
-      height: auto;
-      border-radius: var(--border-radius-sm);
-    }
-
-    .navbar-controls {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    /* Theme Toggle */
-    .theme-toggle {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      cursor: pointer;
-      padding: 0.5rem 1rem;
-      background: var(--gradient-input);
-      border-radius: var(--border-radius-sm);
-      transition: var(--transition);
-    }
-
-    .theme-toggle:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .theme-toggle input[type="checkbox"] {
-      appearance: none;
-      width: 48px;
-      height: 26px;
-      background: var(--dark-lighter);
-      border-radius: 13px;
-      position: relative;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .theme-toggle input[type="checkbox"]::before {
-      content: '';
-      position: absolute;
-      width: 22px;
-      height: 22px;
-      background: var(--text-secondary);
-      border-radius: 50%;
-      top: 2px;
-      left: 2px;
-      transition: var(--transition);
-    }
-
-    .theme-toggle input[type="checkbox"]:checked::before {
-      left: 24px;
-      background: var(--primary);
-    }
-
-    .theme-toggle input[type="checkbox"]:checked {
-      background: var(--primary-dark);
-    }
-
-    .theme-toggle span {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      font-weight: 500;
-    }
-
-    /* Language Dropdown */
-    .language-dropdown {
-      position: relative;
-    }
-
-    .language-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 1rem;
-      background: var(--gradient-input);
-      border: 1px solid var(--dark-lighter);
-      border-radius: var(--border-radius-sm);
-      color: var(--text-primary);
-      cursor: pointer;
-      transition: var(--transition);
-      font-size: 0.875rem;
-    }
-
-    .language-btn:hover {
-      border-color: var(--primary);
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-sm);
-    }
-
-    .language-btn svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    .language-menu {
-      position: absolute;
-      top: calc(100% + 8px);
-      right: 0;
-      background: var(--dark-light);
-      border: 1px solid var(--dark-lighter);
-      border-radius: var(--border-radius-sm);
-      padding: 0.5rem;
-      min-width: 180px;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-10px);
-      transition: var(--transition);
-      box-shadow: var(--shadow-lg);
-    }
-
-    .language-menu.active {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-
-    .language-menu button {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      text-align: left;
-      border-radius: var(--border-radius-sm);
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .language-menu button:hover {
-      background: var(--dark-lighter);
-    }
-
-    /* Main Content */
-    .main-container {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 0 2rem;
-    }
-
-    /* Tabs */
-    .tabs {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .tab-btn {
-      padding: 0.75rem 1.5rem;
-      background: var(--dark-light);
-      border: none;
-      border-radius: var(--border-radius-sm);
-      color: var(--text-secondary);
-      cursor: pointer;
-      font-size: 0.9rem;
-      font-weight: 500;
-      transition: var(--transition);
-    }
-
-    .tab-btn:hover {
-      background: var(--dark-lighter);
-      color: var(--text-primary);
-    }
-
-    .tab-btn.active {
-      background: var(--gradient-primary);
-      color: var(--dark);
-    }
-
-    /* Alerts */
-    .alert {
-      padding: 1rem 1.25rem;
-      border-radius: var(--border-radius-sm);
-      margin-bottom: 1.5rem;
-      border-left: 4px solid;
-    }
-
-    .alert-info {
-      background: rgba(199, 164, 108, 0.1);
-      border-color: var(--primary);
-      color: var(--primary-light);
-    }
-
-    .alert-danger {
-      background: rgba(231, 76, 60, 0.1);
-      border-color: var(--danger);
-      color: #FF6B6B;
-    }
-
-    .alert-icon {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      margin-right: 0.75rem;
-      flex-shrink: 0;
-    }
-
-    /* Form Grid */
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-      margin-bottom: 2rem;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .form-group.full-width {
-      grid-column: 1 / -1;
-    }
-
-    .form-group label {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
-
-    .form-group input[type="number"],
-    .form-group input[type="text"] {
-      padding: 0.875rem 1rem;
-      background: var(--gradient-input);
-      border: 1px solid var(--dark-lighter);
-      border-radius: var(--border-radius-sm);
-      color: var(--text-primary);
-      font-size: 0.95rem;
-      transition: var(--transition);
-    }
-
-    .form-group input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .form-group input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(199, 164, 108, 0.1);
-    }
-
-    .form-hint {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.25rem;
-    }
-
-    /* Action Buttons */
-    .action-buttons {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-
-    .btn {
-      padding: 0.875rem 2rem;
-      border: none;
-      border-radius: var(--border-radius-sm);
-      font-size: 0.95rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      flex: 1;
-    }
-
-    .btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none !important;
-    }
-
+    /* Buttons */
     .btn-primary {
-      background: var(--gradient-primary);
-      color: var(--dark);
+      background: linear-gradient(135deg, #C7A46C, #a88a5a);
+      border: none;
+      color: #1E1E1E;
+      font-weight: bold;
     }
 
-    .btn-primary:not(:disabled):hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(199, 164, 108, 0.3);
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #d8b982, #C7A46C);
+      color: #000;
     }
 
     .btn-danger {
-      background: linear-gradient(135deg, #E74C3C 0%, #C0392B 100%);
-      color: var(--text-primary);
+      background: linear-gradient(135deg, #ff4d4d, #b30000);
+      border: none;
     }
 
-    .btn-danger:not(:disabled):hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    /* Cards / Inputs */
+    .form-control,
+    .form-floating label {
+      background: rgba(255, 255, 255, 0.05) !important;
+      color: #fff !important;
+      border: 1px solid rgba(199, 164, 108, 0.3);
     }
 
-    /* Results Section */
-    .results-section {
-      background: var(--gradient-card);
-      border: 1px solid var(--dark-lighter);
-      border-radius: var(--border-radius);
-      overflow: hidden;
-      display: none;
-    }
-
-    .results-section.visible {
-      display: block;
-    }
-
-    .results-header {
-      padding: 1.25rem 1.5rem;
-      background: var(--dark-light);
-      border-bottom: 1px solid var(--dark-lighter);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .results-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .results-stats {
-      display: flex;
-      gap: 2rem;
-    }
-
-    .stat-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.875rem;
-    }
-
-    .stat-label {
-      color: var(--text-secondary);
-    }
-
-    .stat-value {
-      color: var(--primary);
-      font-weight: 600;
-    }
-
-    .results-actions {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .action-btn {
-      padding: 0.5rem 0.75rem;
-      background: var(--dark-lighter);
-      border: 1px solid var(--dark-lighter);
-      border-radius: var(--border-radius-sm);
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
-    }
-
-    .action-btn:hover {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: var(--dark);
-    }
-
-    .action-btn svg {
-      width: 16px;
-      height: 16px;
+    .form-control:focus {
+      border-color: #C7A46C;
+      box-shadow: 0 0 10px rgba(199, 164, 108, 0.5);
     }
 
     /* Table */
-    .table-container {
-      overflow-x: auto;
+    table {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      overflow: hidden;
     }
 
-    .results-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .results-table thead {
-      background: var(--dark-light);
-    }
-
-    .results-table th {
-      padding: 1rem 1.5rem;
-      text-align: left;
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--text-secondary);
-    }
-
-    .results-table td {
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid var(--dark-lighter);
-      font-size: 0.9rem;
-    }
-
-    .results-table tbody tr {
-      transition: var(--transition);
-    }
-
-    .results-table tbody tr:hover {
-      background: var(--dark-light);
-    }
-
-    .results-table tbody tr:last-child td {
-      border-bottom: none;
-    }
-
-    .ip-cell {
-      font-family: 'Courier New', monospace;
-      color: var(--primary-light);
-      font-weight: 500;
-    }
-
-    .latency-cell {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .latency-badge {
-      padding: 0.25rem 0.75rem;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .latency-good {
-      background: rgba(46, 204, 113, 0.2);
-      color: var(--success);
-    }
-
-    .latency-medium {
+    thead {
       background: rgba(199, 164, 108, 0.2);
-      color: var(--primary);
     }
 
-    .latency-poor {
-      background: rgba(231, 76, 60, 0.2);
-      color: var(--danger);
+    tbody tr:hover {
+      background: rgba(199, 164, 108, 0.1);
+    }
+
+    /* Alerts */
+    .alert-primary {
+      background: rgba(199, 164, 108, 0.15);
+      border: 1px solid rgba(199, 164, 108, 0.4);
+      color: #C7A46C;
+    }
+
+    .alert-danger {
+      background: rgba(255, 0, 0, 0.15);
+      border: 1px solid rgba(255, 0, 0, 0.4);
     }
 
     /* Footer */
     footer {
-      margin-top: 4rem;
-      padding: 2rem 0;
-      border-top: 1px solid var(--dark-lighter);
-    }
-
-    .footer-content {
+      margin-top: 40px;
+      padding: 20px;
+      border-top: 1px solid rgba(199, 164, 108, 0.3);
       text-align: center;
-      padding: 0 2rem;
+      color: #C7A46C;
     }
 
-    .footer-content p {
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      margin-bottom: 1rem;
+    /* Tabs */
+    .nav-tabs .nav-link.active {
+      background: linear-gradient(135deg, #C7A46C, #a88a5a);
+      color: #1E1E1E !important;
+      border: none;
+      font-weight: bold;
     }
 
-    .footer-content a {
-      color: var(--primary);
-      text-decoration: none;
-      transition: var(--transition);
-      font-weight: 500;
+    .nav-tabs .nav-link {
+      color: #C7A46C;
+      border: none;
     }
 
-    .footer-content a:hover {
-      color: var(--primary-light);
-      text-decoration: underline;
+    .nav-tabs {
+      border-bottom: 1px solid rgba(199, 164, 108, 0.3);
     }
 
-    /* Progress Bar */
-    .progress-container {
-      display: none;
-      margin-bottom: 1.5rem;
-    }
-
-    .progress-container.visible {
-      display: block;
-    }
-
-    .progress-bar-bg {
-      height: 6px;
-      background: var(--dark-lighter);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .progress-bar-fill {
-      height: 100%;
-      background: var(--gradient-primary);
-      border-radius: 3px;
-      transition: width 0.3s ease;
-    }
-
-    .progress-text {
-      display: flex;
-      justify-content: space-between;
-      margin-top: 0.5rem;
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-    }
-
-    /* Empty State */
-    .empty-state {
-      padding: 4rem 2rem;
-      text-align: center;
-    }
-
-    .empty-state svg {
-      width: 80px;
-      height: 80px;
-      margin-bottom: 1rem;
-      opacity: 0.3;
-    }
-
-    .empty-state p {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .navbar .container {
-        flex-direction: column;
-        padding: 0 1rem;
-      }
-
-      .navbar-controls {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .action-buttons {
-        flex-direction: column;
-      }
-
-      .results-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .results-stats {
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-
-      .results-actions {
-        width: 100%;
-      }
-
-      .action-btn {
-        flex: 1;
-        justify-content: center;
-      }
-
-      .main-container {
-        padding: 0 1rem;
-        margin: 1rem auto;
-      }
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .results-section.visible {
-      animation: fadeIn 0.5s ease;
-    }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: var(--dark);
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--dark-lighter);
-      border-radius: 4px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--primary);
-    }
-
-    /* Loader */
-    .loader {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(30, 30, 30, 0.3);
-      border-radius: 50%;
-      border-top-color: var(--dark);
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
+    /* Glassmorphism Box */
+    .glass-box {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 20px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(199, 164, 108, 0.2);
+      margin-bottom: 20px;
     }
   </style>
 </head>
 
 <body>
+
   <!-- Navbar -->
-  <nav class="navbar">
-    <div class="container">
-      <a href="#" class="navbar-brand">
-        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" rx="8" fill="url(#grad1)" />
-          <path d="M20 8L32 14V26L20 32L8 26V14L20 8Z" stroke="white" stroke-width="2" fill="none" />
-          <circle cx="20" cy="20" r="5" fill="white" />
-          <defs>
-            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#C7A46C" />
-              <stop offset="100%" style="stop-color:#A68A4E" />
-            </linearGradient>
-          </defs>
-        </svg>
-        Clean IP Scanner
-      </a>
+  <nav class="navbar px-3 py-2">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
 
-      <div class="navbar-controls">
-        <!-- Theme Toggle -->
-        <div class="theme-toggle">
-          <input type="checkbox" id="themeToggle" checked>
-          <span>Dark Mode</span>
-        </div>
-
-        <!-- Language Dropdown -->
-        <div class="language-dropdown">
-          <button class="language-btn" id="languageBtn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M2 12h20" />
-              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-            </svg>
-            <span>Language</span>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M2 4L6 8L10 4" />
-            </svg>
-          </button>
-          <div class="language-menu" id="languageMenu">
-            <button onclick="changeLanguage('en')">🇬🇧 English</button>
-            <button onclick="changeLanguage('de')">🇩🇪 Deutsch</button>
-            <button onclick="changeLanguage('fa')">🇮🇷 فارسی</button>
-            <button onclick="changeLanguage('fr')">🇫🇷 Française</button>
-            <button onclick="changeLanguage('tr')">🇹🇷 Türkçe</button>
-            <button onclick="changeLanguage('es')">🇪🇸 Español</button>
-            <button onclick="changeLanguage('zh')">🇨🇳 中文</button>
-          </div>
-        </div>
+      <div class="form-check form-switch">
+        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" onclick="toggleTheme()" checked>
+        <label class="form-check-label" for="flexSwitchCheckChecked">Dark Mode</label>
       </div>
+
+      <h1>Clean IP Scanner</h1>
+
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown">
+          زبان / Language
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" onclick="changeLanguage('fa')">فارسی 🇮🇷</a></li>
+          <li><a class="dropdown-item" onclick="changeLanguage('en')">English 🇬🇧</a></li>
+          <li><a class="dropdown-item" onclick="changeLanguage('de')">Deutsch 🇩🇪</a></li>
+          <li><a class="dropdown-item" onclick="changeLanguage('fr')">Française 🇫🇷</a></li>
+          <li><a class="dropdown-item" onclick="changeLanguage('tr')">Türkçe 🇹🇷</a></li>
+          <li><a class="dropdown-item" onclick="changeLanguage('es')">Español 🇪🇸</a></li>
+          <li><a class="dropdown-item" onclick="changeLanguage('zh')">中文 🇨🇳</a></li>
+        </ul>
+      </div>
+
     </div>
   </nav>
 
-  <!-- Main Content -->
-  <div class="main-container">
+  <div class="container col-md-8 mt-4">
+
     <!-- Tabs -->
-    <div class="tabs">
-      <button class="tab-btn" onclick="window.location.href='/xray-fragmenter/'">Xray Fragmenter</button>
-      <button class="tab-btn active">Clean IP Scanner</button>
-    </div>
+    <ul class="nav nav-tabs mb-3">
+      <li class="nav-item">
+        <a class="nav-link" href="/xray-fragmenter/">Xray Fragmenter</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active">Clean IP Scanner</a>
+      </li>
+    </ul>
 
-    <!-- Info Alert -->
-    <div class="alert alert-info">
-      <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M12 16v-4" />
-        <path d="M12 8h.01" />
-      </svg>
-      <span id="infoAlert">This tool helps you find clean IP addresses with low latency. Configure your settings and click Start Scan to begin.</span>
-    </div>
+    <!-- Alerts -->
+    <div class="alert alert-primary">برای شروع اسکن، تنظیمات موردنظر را وارد کنید.</div>
 
-    <!-- Form Grid -->
-    <div class="form-grid">
-      <div class="form-group">
-        <label for="max-ip">IP Count</label>
-        <input type="number" id="max-ip" min="1" max="5000" value="5" placeholder="Enter number of IPs">
-        <span class="form-hint">Number of IPs to scan (1-5000)</span>
-      </div>
+    <!-- Inputs -->
+    <div class="glass-box">
+      <div class="row g-3">
 
-      <div class="form-group">
-        <label for="max-latency">Maximum Latency (ms)</label>
-        <input type="number" id="max-latency" min="50" max="3000" step="50" value="500" placeholder="Max latency">
-        <span class="form-hint">Acceptable latency threshold (50-3000ms)</span>
-      </div>
-
-      <div class="form-group">
-        <label for="ip-include">Include IP Ranges</label>
-        <input type="text" id="ip-include" placeholder="e.g., 1.1.1.1/24, 8.8.8.8/24">
-        <span class="form-hint">IP ranges to include in scan</span>
-      </div>
-
-      <div class="form-group">
-        <label for="ip-exclude">Exclude IP Ranges</label>
-        <input type="text" id="ip-exclude" placeholder="e.g., 1, 88.25, 41.55">
-        <span class="form-hint">IP ranges to exclude from scan</span>
-      </div>
-
-      <div class="form-group full-width">
-        <label for="ip-regex">Regular Expression Filter</label>
-        <input type="text" id="ip-regex" placeholder="e.g., ^88\.172\.|^101\.">
-        <span class="form-hint">Regex pattern to filter IPs</span>
-      </div>
-    </div>
-
-    <!-- Warning Alert -->
-    <div class="alert alert-danger">
-      <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
-        <path d="M12 9v4" />
-        <path d="M12 17h.01" />
-      </svg>
-      <span id="warningAlert">⚠️ Be careful when using this tool. Excessive scanning may result in being blocked by some services. Use responsibly and respect rate limits.</span>
-    </div>
-
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-      <button class="btn btn-primary" id="btn-start" onclick="startScan()" disabled>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polygon points="5 3 19 12 5 21 5 3" />
-        </svg>
-        Start Scan
-      </button>
-      <button class="btn btn-danger" id="btn-cancel" onclick="cancelScan()" disabled>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="6" y="4" width="4" height="16" />
-          <rect x="14" y="4" width="4" height="16" />
-        </svg>
-        Stop
-      </button>
-    </div>
-
-    <!-- Progress -->
-    <div class="progress-container" id="progressContainer">
-      <div class="progress-bar-bg">
-        <div class="progress-bar-fill" id="progressBar" style="width: 0%"></div>
-      </div>
-      <div class="progress-text">
-        <span id="progressStatus">Initializing...</span>
-        <span id="progressPercent">0%</span>
-      </div>
-    </div>
-
-    <!-- Results Section -->
-    <div class="results-section" id="resultsSection">
-      <div class="results-header">
-        <div class="results-title">Scan Results</div>
-        <div class="results-stats">
-          <div class="stat-item">
-            <span class="stat-label">Scanned:</span>
-            <span class="stat-value" id="scannedCount">0</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Found:</span>
-            <span class="stat-value" id="foundCount">0</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-label">Avg Latency:</span>
-            <span class="stat-value" id="avgLatency">0ms</span>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input class="form-control" type="number" id="max-ip" value="5" />
+            <label>تعداد IP</label>
           </div>
         </div>
-        <div class="results-actions">
-          <button class="action-btn" onclick="downloadAsCSV()" title="Download as CSV">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            CSV
-          </button>
-          <button class="action-btn" onclick="downloadAsJSON()" title="Download as JSON">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-              <polyline points="14 2 14 8 20 8" />
-            </svg>
-            JSON
-          </button>
-          <button class="action-btn" onclick="copyAllToClipboard()" title="Copy to clipboard">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-            </svg>
-            Copy
-          </button>
-        </div>
-      </div>
 
-      <div class="table-container">
-        <table class="results-table">
-          <thead>
-            <tr>
-              <th width="60">#</th>
-              <th style="min-width: 150px">IP Address</th>
-              <th>Latency</th>
-              <th width="80">Status</th>
-            </tr>
-          </thead>
-          <tbody id="result">
-            <!-- Results will be inserted here -->
-          </tbody>
-        </table>
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input class="form-control" type="number" id="max-latency" value="500" />
+            <label>حداکثر پینگ</label>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input class="form-control" type="text" id="ip-include" />
+            <label>رنج‌های مجاز</label>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-floating">
+            <input class="form-control" type="text" id="ip-exclude" />
+            <label>رنج‌های غیرمجاز</label>
+          </div>
+        </div>
+
+        <div class="col-md-12">
+          <div class="form-floating">
+            <input class="form-control" type="text" id="ip-regex" />
+            <label>Regex فیلتر</label>
+          </div>
+        </div>
+
       </div>
     </div>
+
+    <div class="alert alert-danger">در صورت وارد کردن رنج اشتباه، اسکن انجام نمی‌شود.</div>
+
+    <!-- Buttons -->
+    <div class="d-grid gap-2">
+      <button class="btn btn-primary" id="btn-start" onclick="startScan()">شروع</button>
+      <button class="btn btn-danger" id="btn-cancel" onclick="cancelScan()">توقف</button>
+    </div>
+
+    <!-- Table -->
+    <div class="glass-box mt-4">
+      <table class="table table-striped text-center">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>IP</th>
+            <th>Latency</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="result"></tbody>
+      </table>
+    </div>
+
+    <footer>
+      <p>Developed with ❤️ — Modern UI Edition</p>
+      <a href="https://github.com/drunkleen">GitHub</a>
+    </footer>
+
   </div>
 
-  <!-- Footer -->
-  <footer>
-    <div class="footer-content">
-      <p>© 2024 Clean IP Scanner. Built with modern web technologies.</p>
-      <a href="https://github.com/drunkleen" target="_blank">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="display: inline-block; vertical-align: middle; margin-right: 0.5rem;">
-          <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-        </svg>
-        GitHub
-      </a>
-    </div>
-  </footer>
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="./assets/js/jquery.min.js"></script>
+  <script src="./assets/js/script.js"></script>
+  <script src="./assets/js/utils.js"></script>
 
-  <script>
-    // State
-    let isScanning = false;
-    let scanResults = [];
-    let scanInterval = null;
-
-    // DOM Elements
-    const themeToggle = document.getElementById('themeToggle');
-    const languageBtn = document.getElementById('languageBtn');
-    const languageMenu = document.getElementById('languageMenu');
-    const btnStart = document.getElementById('btn-start');
-    const btnCancel = document.getElementById('btn-cancel');
-    const progressContainer = document.getElementById('progressContainer');
-    const progressBar = document.getElementById('progressBar');
-    const progressStatus = document.getElementById('progressStatus');
-    const progressPercent = document.getElementById('progressPercent');
-    const resultsSection = document.getElementById('resultsSection');
-    const resultTable = document.getElementById('result');
-    const scannedCount = document.getElementById('scannedCount');
-    const foundCount = document.getElementById('foundCount');
-    const avgLatency = document.getElementById('avgLatency');
-
-    // Theme Toggle
-    themeToggle.addEventListener('change', function() {
-      if (this.checked) {
-        document.body.style.background = 'linear-gradient(180deg, #1E1E1E 0%, #0D0D0D 100%)';
-        document.body.style.color = '#FFFFFF';
-      } else {
-        document.body.style.background = '#FFFFFF';
-        document.body.style.color = '#1E1E1E';
-      }
-    });
-
-    // Language Dropdown
-    languageBtn.addEventListener('click', function(e) {
-      e.stopPropagation();
-      languageMenu.classList.toggle('active');
-    });
-
-    document.addEventListener('click', function() {
-      languageMenu.classList.remove('active');
-    });
-
-    // Change Language
-    function changeLanguage(lang) {
-      console.log('Language changed to:', lang);
-      // Implement language change logic here
-      languageMenu.classList.remove('active');
-    }
-
-    // Enable start button
-    document.querySelectorAll('input').forEach(input => {
-      input.addEventListener('input', function() {
-        if (!isScanning) {
-          btnStart.disabled = false;
-        }
-      });
-    });
-
-    // Start Scan
-    function startScan() {
-      if (isScanning) return;
-
-      isScanning = true;
-      scanResults = [];
-      btnStart.disabled = true;
-      btnCancel.disabled = false;
-      progressContainer.classList.add('visible');
-      resultsSection.classList.remove('visible');
-      resultTable.innerHTML = '';
-
-      let maxIP = parseInt(document.getElementById('max-ip').value) || 5;
-      let maxLatency = parseInt(document.getElementById('max-latency').value) || 500;
-
-      let scanned = 0;
-      let found = 0;
-
-      scanInterval = setInterval(() => {
-        scanned++;
-        const latency = Math.floor(Math.random() * 400) + 50;
-        const ip = generateRandomIP();
-
-        if (latency <= maxLatency) {
-          found++;
-          scanResults.push({
-            ip: ip,
-            latency: latency
-          });
-
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${found}</td>
-            <td class="ip-cell">${ip}</td>
-            <td class="latency-cell">
-              <span class="latency-badge ${getLatencyClass(latency)}">${latency}ms</span>
-            </td>
-            <td>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2ECC71" stroke-width="3">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-            </td>
-          `;
-          resultTable.appendChild(row);
-        }
-
-        progressBar.style.width = (scanned / maxIP * 100) + '%';
-        progressStatus.textContent = `Scanning IP ${scanned}/${maxIP}...`;
-        progressPercent.textContent = Math.round(scanned / maxIP * 100) + '%';
-
-        scannedCount.textContent = scanned;
-        foundCount.textContent = found;
-
-        if (scanResults.length > 0) {
-          const avg = Math.round(scanResults.reduce((sum, r) => sum + r.latency, 0) / scanResults.length);
-          avgLatency.textContent = avg + 'ms';
-        }
-
-        if (scanned >= maxIP) {
-          stopScan();
-          resultsSection.classList.add('visible');
-        }
-      }, 200);
-    }
-
-    // Stop Scan
-    function stopScan() {
-      clearInterval(scanInterval);
-      isScanning = false;
-      btnStart.disabled = false;
-      btnCancel.disabled = true;
-      progressStatus.textContent = 'Scan completed!';
-    }
-
-    // Cancel Scan
-    function cancelScan() {
-      stopScan();
-      progressStatus.textContent = 'Scan cancelled!';
-      resultsSection.classList.add('visible');
-    }
-
-    // Generate Random IP
-    function generateRandomIP() {
-      return `${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}.${Math.floor(Math.random() * 256)}`;
-    }
-
-    // Get Latency Class
-    function getLatencyClass(latency) {
-      if (latency < 100) return 'latency-good';
-      if (latency < 200) return 'latency-medium';
-      return 'latency-poor';
-    }
-
-    // Download as CSV
-    function downloadAsCSV() {
-      if (scanResults.length === 0) return;
-
-      const csv = 'IP Address,Latency (ms)\n' + scanResults.map(r => `${r.ip},${r.latency}`).join('\n');
-      downloadFile(csv, 'scan-results.csv', 'text/csv');
-    }
-
-    // Download as JSON
-    function downloadAsJSON() {
-      if (scanResults.length === 0) return;
-
-      const json = JSON.stringify(scanResults, null, 2);
-      downloadFile(json, 'scan-results.json', 'application/json');
-    }
-
-    // Copy to Clipboard
-    function copyAllToClipboard() {
-      if (scanResults.length === 0) return;
-
-      const text = scanResults.map(r => r.ip).join('\n');
-      navigator.clipboard.writeText(text).then(() => {
-        alert('IPs copied to clipboard!');
-      });
-    }
-
-    // Download File
-    function downloadFile(content, filename, type) {
-      const blob = new Blob([content], { type: type });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    }
-  </script>
 </body>
 
 </html>
